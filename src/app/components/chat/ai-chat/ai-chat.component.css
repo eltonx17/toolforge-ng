@@ -1,0 +1,70 @@
+/* Styles for AI Chat Component */
+.chat-container {
+  display: flex;
+  flex-direction: column;
+  height: 100%;
+  width: 100%;
+}
+
+.messages {
+  flex: 1;
+  display: flex;
+  flex-direction: column-reverse;
+  overflow-y: auto;
+  padding: 10px;
+  border: 1px solid #5f6c6f; 
+  margin-bottom: 10px;
+  border-radius: 5px;
+  /* Messages will be displayed here */
+}
+
+.message {
+  align-self: flex-end;
+  background-color: #0d0d0d;
+  border-radius: 10px;
+  margin: 5px;
+  padding: 10px;
+  max-width: 60%;
+}
+
+.input-container {
+  display: flex;
+}
+
+input[type="text"] {
+  flex: 1;
+  padding: 10px;
+  border: 1px solid #ccc;
+  border-radius: 4px;
+}
+
+textarea[clrTextarea] {
+  flex: 1;
+  max-height: 6em;
+  overflow-y: auto;
+  width: calc(100vw - 142px);
+}
+
+textarea {
+  flex: 1;
+  margin-right: 10px;
+}
+
+button {
+  padding: 10px 20px;
+  margin-left: 10px;
+  border: none;
+  background-color: #007bff;
+  color: white;
+  border-radius: 4px;
+  cursor: pointer;
+  align-self: flex-end;
+}
+
+button.btn.btn-primary {
+  margin-left: 10px;
+}
+
+button:hover {
+  background-color: #0056b3;
+}

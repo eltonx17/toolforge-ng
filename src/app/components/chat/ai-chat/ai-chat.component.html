@@ -1,0 +1,9 @@
+<div class="chat-container">
+  <div class="messages">
+    <div *ngFor="let message of messages" class="message">{{ message }}</div>
+  </div>
+  <div class="input-container">
+    <textarea clrTextarea placeholder="Type your message..." [(ngModel)]="newMessage" (keydown)="handleKeydown($event)"></textarea>
+    <button class="btn btn-primary" (click)="sendMessage()">Send</button>
+  </div>
+</div>
