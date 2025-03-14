@@ -3,11 +3,12 @@ import { CommonModule } from '@angular/common';
 import { ClarityModule } from '@clr/angular';
 import { FormsModule } from '@angular/forms';
 import { ClrTextareaModule } from '@clr/angular';
+import { RouterModule } from '@angular/router';
 
 @Component({
   selector: 'app-ai-chat',
   standalone: true,
-  imports: [ClarityModule, ClrTextareaModule, FormsModule, CommonModule],
+  imports: [RouterModule, ClarityModule, ClrTextareaModule, FormsModule, CommonModule],
   templateUrl: './ai-chat.component.html',
   styleUrls: ['./ai-chat.component.css']
 })
