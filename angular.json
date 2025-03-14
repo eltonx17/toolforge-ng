@@ -24,8 +24,7 @@
               {
                 "glob": "**/*",
                 "input": "public"
-              },
-              "src/_redirects"
+              }
             ],
             "styles": [
               "node_modules/@cds/core/global.min.css",
@@ -86,8 +85,7 @@
               {
                 "glob": "**/*",
                 "input": "public"
-              },
-              "src/_redirects"
+              }
             ],
             "styles": [
               "node_modules/@cds/core/global.min.css",
