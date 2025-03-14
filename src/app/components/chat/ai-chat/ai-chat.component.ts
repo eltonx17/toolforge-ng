@@ -17,7 +17,7 @@ export class AiChatComponent {
 
   sendMessage() {
     if (this.newMessage.trim()) {
-      this.messages.unshift(this.newMessage);
+      this.messages.unshift(this.newMessage.replace(/\n/g, '\n'));
       this.newMessage = '';
     }
   }
