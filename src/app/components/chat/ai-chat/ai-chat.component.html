@@ -1,9 +1,13 @@
-<div class="chat-container content-container">
-  <div class="messages" style="white-space: pre-wrap;">
-    <p *ngFor="let message of messages" class="message">{{ message }}</p>
+<div class="clr-row center-align">
+  <div class="clr-col-lg-9 clr-col-md-8 clr-col-12 center-align">
+    <div class="chat-container content-container">
+      <div class="messages" style="white-space: pre-wrap;">
+        <p *ngFor="let message of messages" class="message">{{ message }}</p>
+      </div>
+      <div class="input-container">
+        <textarea id="chatTextarea" clrTextarea placeholder="Type your message..." [(ngModel)]="newMessage"
+          (keydown)="handleKeydown($event)"></textarea>
+        <button class="btn btn-primary" (click)="sendMessage()">Send</button>
+      </div>
+    </div>
   </div>
-  <div class="input-container">
-    <textarea id="chatTextarea" clrTextarea placeholder="Type your message..." [(ngModel)]="newMessage" (keydown)="handleKeydown($event)"></textarea>
-    <button class="btn btn-primary" (click)="sendMessage()">Send</button>
-  </div>
-</div>

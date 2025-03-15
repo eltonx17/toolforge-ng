@@ -66,6 +66,12 @@ button:hover {
   background-color: #0056b3;
 }
 
+.center-align {
+  margin-left: auto;
+  margin-right: auto;
+  height: 100%;
+}
+
 @media (max-width: 600px) {
   .chat-container {
     height: 100%;
