@@ -2,9 +2,9 @@ import { Component } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { RouterOutlet, Router, RouterModule } from '@angular/router';
 import { ClarityModule } from '@clr/angular';
-import { ClarityIcons, toolsIcon, cogIcon, moonIcon, sunIcon } from '@cds/core/icon';
+import { ClarityIcons, toolsIcon, cogIcon, moonIcon, sunIcon, chatBubbleIcon, homeIcon, hashtagIcon, codeIcon } from '@cds/core/icon';
 
-ClarityIcons.addIcons(toolsIcon, cogIcon, moonIcon, sunIcon);
+ClarityIcons.addIcons(toolsIcon, cogIcon, moonIcon, sunIcon, chatBubbleIcon, homeIcon, hashtagIcon, codeIcon);
 
 @Component({
   selector: 'app-navbar',

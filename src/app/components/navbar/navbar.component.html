@@ -13,8 +13,33 @@
         </div>
     </clr-header>
     <div class="content-container">
-        <div class="content-area">
-            <router-outlet></router-outlet>
+        <clr-vertical-nav [clrVerticalNavCollapsible]="true" [clrVerticalNavCollapsed]="true" class="nav-trigger--bottom">
+            <a clrVerticalNavLink routerLink="/" routerLinkActive="active" [routerLinkActiveOptions]="{ exact: true }">
+                <cds-icon clrVerticalNavIcon shape="home"></cds-icon>
+                Home
+            </a>
+            <div class="nav-divider"></div>
+            <a clrVerticalNavLink routerLink="/ai-chat" routerLinkActive="active">
+                <cds-icon clrVerticalNavIcon shape="chat-bubble"></cds-icon>
+                Converser AI
+            </a>
+            <a clrVerticalNavLink routerLink="/sha256hash" routerLinkActive="active">
+                <cds-icon clrVerticalNavIcon shape="hashtag"></cds-icon>
+                Hashers
+            </a>
+            <a clrVerticalNavLink routerLink="/json-formatter" routerLinkActive="active">
+                <cds-icon clrVerticalNavIcon shape="code"></cds-icon>
+                Formatters
+            </a>
+            <a clrVerticalNavLink routerLink="/json-formatter" routerLinkActive="active">
+                <cds-icon clrVerticalNavIcon shape="code"></cds-icon>
+                Decoders
+            </a>
+        </clr-vertical-nav> 
+        <div class="content-container">
+            <div class="content-area">
+                <router-outlet></router-outlet>
+            </div>
         </div>
     </div>
 </clr-main-container>

@@ -20,3 +20,12 @@
 .clr-toggle-wrapper input[type=checkbox]:checked + label::after {
   border-color: hsl(118, 26%, 49%) !important;
 }
+
+
+.clr-form-control {
+  width: 100% !important;
+}
+
+.clr-control-container {
+  width: 100% !important;
+}
