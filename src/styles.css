@@ -21,11 +21,33 @@
   border-color: hsl(118, 26%, 49%) !important;
 }
 
-
 .clr-form-control {
   width: 100% !important;
 }
 
 .clr-control-container {
   width: 100% !important;
+}
+
+@media (max-width: 600px) {
+  .main-container {
+    height: 90vh !important;
+  }
+
+  .height-limit {
+    display: flex;
+    height: 90%;
+  }
+}
+
+@media only screen and (max-device-width: 812px) and (-webkit-min-device-pixel-ratio: 2) and (orientation: portrait) {
+  .height-limit {
+    height: 90vh;
+  }
+}
+
+@media only screen and (max-device-width: 812px) and (-webkit-min-device-pixel-ratio: 2) and (orientation: landscape) {
+  .height-limit {
+    height: 90vh;
+  }
 }
