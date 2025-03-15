@@ -1,52 +1,147 @@
 <div class="clr-row">
   <div class="clr-col-lg-5 clr-col-md-8 clr-col-12">
-    <div class="card">
-      <div class="card-block">
-        <div class="card-title">Converser AI</div>
+    <div class="card" (mouseover)="showOverlay(0)" (mouseout)="hideOverlay(0)">
+      <div class="card-block" routerLink="/ai-chat" routerLinkActive="active">
+        <div class="card-title">
+          <cds-icon shape="chat-bubble" class="margin-right"></cds-icon>
+          Converser AI
+        </div>
         <div class="card-text">
-          Card content can contain text, links, images, data visualizations, lists and more.
+          <div class="clr-row">
+            <div class="clr-col-11">
+              Chat with AI to get help with your queries
+            </div>
+            <div class="clr-col-1">
+              <cds-icon shape="arrow" direction="right" *ngIf="isHovered[0]" class="margin-left"></cds-icon>
+            </div>
+          </div>
         </div>
       </div>
     </div>
-    <div class="card">
+    <div class="card" (mouseover)="showOverlay(1)" (mouseout)="hideOverlay(1)">
       <div class="card-block">
-        <div class="card-title">Formatters & Validators</div>
+        <div class="card-title">
+          <cds-icon shape="form" class="margin-right"></cds-icon>
+          Formatters & Validators
+        </div>
         <div class="card-text">
-          Card content can contain text, links, images, data visualizations, lists and more.
+          <div class="clr-row">
+            <div class="clr-col-11">
+              Validate and Format JSON, XML, YAML files
+            </div>
+            <div class="clr-col-1">
+              <cds-icon shape="arrow" direction="right" *ngIf="isHovered[1]" class="margin-left"></cds-icon>
+            </div>
+          </div>
         </div>
       </div>
     </div>
-    <div class="card">
+    <div class="card" (mouseover)="showOverlay(2)" (mouseout)="hideOverlay(2)">
       <div class="card-block">
-        <div class="card-title">Hashers</div>
+        <div class="card-title">
+          <cds-icon shape="hashtag" class="margin-right"></cds-icon>
+          Hashers
+        </div>
         <div class="card-text">
-          Card content can contain text, links, images, data visualizations, lists and more.
+          <div class="clr-row">
+            <div class="clr-col-11">
+              Generate Hashes - MD5, SHA256
+            </div>
+            <div class="clr-col-1">
+              <cds-icon shape="arrow" direction="right" *ngIf="isHovered[2]" class="margin-left"></cds-icon>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div class="card" (mouseover)="showOverlay(3)" (mouseout)="hideOverlay(3)">
+      <div class="card-block">
+        <div class="card-title">
+          <cds-icon shape="wrench" class="margin-right"></cds-icon>
+          Regex Tester
+        </div>
+        <div class="card-text">
+          <div class="clr-row">
+            <div class="clr-col-11">
+              Build & test Regular Expressions
+            </div>
+            <div class="clr-col-1">
+              <cds-icon shape="arrow" direction="right" *ngIf="isHovered[3]" class="margin-left"></cds-icon>
+            </div>
+          </div>
         </div>
       </div>
     </div>
   </div>
   <div class="clr-col-lg-5 clr-col-md-8 clr-col-12">
-    <div class="card">
+    <div class="card" (mouseover)="showOverlay(4)" (mouseout)="hideOverlay(4)">
       <div class="card-block">
-        <div class="card-title">Translators</div>
+        <div class="card-title"><cds-icon shape="language" class="margin-right"></cds-icon>
+          Translators
+        </div>
         <div class="card-text">
-          Card content can contain text, links, images, data visualizations, lists and more.
+          <div class="clr-row">
+            <div class="clr-col-11">
+              Translate a block of code from one programming language to another
+            </div>
+            <div class="clr-col-1">
+              <cds-icon shape="arrow" direction="right" *ngIf="isHovered[4]" class="margin-left"></cds-icon>
+            </div>
+          </div>
         </div>
       </div>
     </div>
-    <div class="card">
+    <div class="card" (mouseover)="showOverlay(5)" (mouseout)="hideOverlay(5)">
       <div class="card-block">
-        <div class="card-title">Encoders & Decoders</div>
+        <div class="card-title">
+          <cds-icon shape="nvme" class="margin-right"></cds-icon>
+          Encoders & Decoders
+        </div>
         <div class="card-text">
-          Card content can contain text, links, images, data visualizations, lists and more.
+          <div class="clr-row">
+            <div class="clr-col-11">
+              Encode & Decode strings
+            </div>
+            <div class="clr-col-1">
+              <cds-icon shape="arrow" direction="right" *ngIf="isHovered[5]" class="margin-left"></cds-icon>
+            </div>
+          </div>
         </div>
       </div>
     </div>
-    <div class="card">
+    <div class="card" (mouseover)="showOverlay(6)" (mouseout)="hideOverlay(6)">
       <div class="card-block">
-        <div class="card-title">API Tester</div>
+        <div class="card-title">
+          <cds-icon shape="bolt" class="margin-right"></cds-icon>
+          API Tester
+        </div>
         <div class="card-text">
-          Card content can contain text, links, images, data visualizations, lists and more.
+          <div class="clr-row">
+            <div class="clr-col-11">
+              Test REST APIs
+            </div>
+            <div class="clr-col-1">
+              <cds-icon shape="arrow" direction="right" *ngIf="isHovered[6]" class="margin-left"></cds-icon>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div class="card" (mouseover)="showOverlay(7)" (mouseout)="hideOverlay(7)">
+      <div class="card-block">
+        <div class="card-title">
+          <cds-icon shape="data-cluster" class="margin-right"></cds-icon>
+          SQL Builder
+        </div>
+        <div class="card-text">
+          <div class="clr-row">
+            <div class="clr-col-11">
+              Build SQL queries with ease
+            </div>
+            <div class="clr-col-1">
+              <cds-icon shape="arrow" direction="right" *ngIf="isHovered[7]" class="margin-left"></cds-icon>
+            </div>
+          </div>
         </div>
       </div>
     </div>

@@ -2,18 +2,18 @@
     <clr-header class="header header-7">
         <div class="branding">
             <a routerLink="/" routerLinkActive="active" class="nav-link">
-                <cds-icon shape="tools" style="color: white;"></cds-icon>
+                <cds-icon shape="tools" style="color: white; width: 30px"></cds-icon>
                 <span class="title">ToolForge</span>
             </a>
         </div>
         <div class="header-actions" style="display: flex; align-items: center;">
             <cds-icon shape="moon" class="moon-icon margin-right"></cds-icon>
             <input type="checkbox" (change)="toggleTheme($event)" clrToggle>
-            <cds-icon shape="sun" class="sun-icon"></cds-icon>
+            <cds-icon shape="sun" class="sun-icon margin-right"></cds-icon>
         </div>
     </clr-header>
     <div class="content-container">
-        <clr-vertical-nav [clrVerticalNavCollapsible]="true" [clrVerticalNavCollapsed]="true" class="nav-trigger--bottom">
+        <clr-vertical-nav [clr-nav-level]="2" [clrVerticalNavCollapsible]=isNavCollapsed [clrVerticalNavCollapsed]=isNavCollapsed class="nav-trigger--bottom">
             <a clrVerticalNavLink routerLink="/" routerLinkActive="active" [routerLinkActiveOptions]="{ exact: true }">
                 <cds-icon clrVerticalNavIcon shape="home"></cds-icon>
                 Home
@@ -28,12 +28,20 @@
                 Hashers
             </a>
             <a clrVerticalNavLink routerLink="/json-formatter" routerLinkActive="active">
-                <cds-icon clrVerticalNavIcon shape="code"></cds-icon>
+                <cds-icon clrVerticalNavIcon shape="form"></cds-icon>
                 Formatters
             </a>
             <a clrVerticalNavLink routerLink="/json-formatter" routerLinkActive="active">
-                <cds-icon clrVerticalNavIcon shape="code"></cds-icon>
-                Decoders
+                <cds-icon clrVerticalNavIcon shape="nvme"></cds-icon>
+                Encoders & Decoders
+            </a>
+            <a clrVerticalNavLink routerLink="/json-formatter" routerLinkActive="active">
+                <cds-icon clrVerticalNavIcon shape="language"></cds-icon>
+                Translators
+            </a>
+            <a clrVerticalNavLink routerLink="/json-formatter" routerLinkActive="active">
+                <cds-icon clrVerticalNavIcon shape="bolt"></cds-icon>
+                API Tester
             </a>
         </clr-vertical-nav> 
         <div class="content-container">

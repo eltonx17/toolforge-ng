@@ -1,0 +1,17 @@
+.margin-right {
+  margin-right: 5px;
+}
+
+.margin-left {
+    margin-left: 40%;
+  }
+
+/* Add this CSS to apply a light gray shadow on hover with a subtle fade in and fade out animation */
+.card {
+  transition: box-shadow 0.15s ease-in-out;
+}
+
+.card:hover {
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+  cursor: pointer;
+}
