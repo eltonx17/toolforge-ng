@@ -1,8 +1,22 @@
-<div class="clr-row editor-panel">
-    <div class="clr-col-lg-6 clr-col-md-6 clr-col-12">
-        <ngx-monaco-editor [options]="editorOptions" [(ngModel)]="code" [language]="language" class="editor"></ngx-monaco-editor>
+<div class="editor-panel">
+    <div class="source">
+        <div class="btn-group btn-sm ">
+            <div class="checkbox btn">
+                <input type="checkbox" (click)="toggleWordWrap()" id="btn-demo-check-1" checked />
+                <label for="btn-demo-check-1">Word Wrap</label>
+            </div>
+        </div>
+        <div class="btn-outline-primary btn-sm tool-button">
+            <button class="btn" (click)="copyToClipboard()">Copy</button>
+        </div>
+        <ngx-monaco-editor [options]="editorOptions" [(ngModel)]="code" [language]="language"
+            class="editor"></ngx-monaco-editor>
     </div>
-    <div class="clr-col-lg-6 clr-col-md-6 clr-col-12">
-        <ngx-monaco-editor [options]="editorOptions" [(ngModel)]="code" [language]="language" class="editor"></ngx-monaco-editor>
-    </div>
+    <!-- <div class="clr-col-lg-6 clr-col-md-6 clr-col-12 transformed">
+        <div class="btn-outline-primary btn-sm tool-button">
+            <button class="btn" (click)="copyToClipboard()">Copy</button>
+        </div>
+        <ngx-monaco-editor [options]="editorOptions" [(ngModel)]="code" [language]="language"
+            class="editor"></ngx-monaco-editor>
+    </div> -->
 </div>
