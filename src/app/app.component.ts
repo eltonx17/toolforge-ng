@@ -1,6 +1,7 @@
 import { Component } from '@angular/core';
 import { NavbarComponent } from './components/navbar/navbar.component';
 import { ClarityModule } from '@clr/angular';
+import { FormatterComponent } from './components/formatter/formatter.component';
 
 @Component({
   selector: 'app-root',

@@ -1,15 +1,15 @@
 import { Component } from '@angular/core';
 import { RouterModule } from '@angular/router';
-import { EditorPanelComponent } from '../../editor-panel/editor-panel.component';
+import { EditorPanelComponent } from '../editor-panel/editor-panel.component';
 import { ClarityModule } from '@clr/angular';
 
 @Component({
-  selector: 'app-json-formatter',
+  selector: 'app-formatter',
   imports: [RouterModule, EditorPanelComponent, ClarityModule],
-  templateUrl: './json-formatter.component.html',
-  styleUrl: './json-formatter.component.css'
+  templateUrl: './formatter.component.html',
+  styleUrl: './formatter.component.css'
 })
-export class JsonFormatterComponent {
+export class FormatterComponent {
   selectedJsonMethod: string = 'JSON Validator';
 
   onHashMethodSelect(event: Event) {

@@ -12,3 +12,5 @@ export const appConfig: ApplicationConfig = {
     provideMonacoEditor()
   ]
 };
+
+export * from './components/formatter/formatter.component';
