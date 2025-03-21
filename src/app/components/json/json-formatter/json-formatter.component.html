@@ -1,1 +1,81 @@
-<p>json-formatter works!</p>
+<clr-tabs>
+
+    <clr-tab>
+        <button clrTabLink>JSON</button>
+        <clr-tab-content *clrIfActive>
+            <div class="clr-row button-panel">
+                <div class="clr-col-12">
+                    <clr-dropdown>
+                        <button class="btn btn-outline-primary" clrDropdownTrigger>
+                            {{ selectedJsonMethod }}
+                            <cds-icon shape="angle" direction="down"></cds-icon>
+                        </button>
+                        <clr-dropdown-menu clrPosition="bottom-left" *clrIfOpen>
+                            <div aria-label="JSON-Formatter" clrDropdownItem (click)="onHashMethodSelect($event)">JSON
+                                Validator</div>
+                            <div aria-label="JSON-Viewer" clrDropdownItem (click)="onHashMethodSelect($event)">JSON
+                                Explorer</div>
+                        </clr-dropdown-menu>
+                    </clr-dropdown>
+                    <button class="btn btn-success" style="float: right;">{{ selectedJsonMethod === 'JSON Validator' ?
+                        'Validate' : 'Explore' }}</button>
+                </div>
+            </div>
+            <app-editor-panel language="json"></app-editor-panel>
+        </clr-tab-content>
+    </clr-tab>
+
+
+    <clr-tab>
+        <button clrTabLink>XML</button>
+        <clr-tab-content *clrIfActive>
+            <div class="clr-row button-panel">
+                <div class="clr-col-12">
+                    <clr-dropdown>
+                        <button class="btn btn-outline-primary" clrDropdownTrigger>
+                            {{ selectedJsonMethod }}
+                            <cds-icon shape="angle" direction="down"></cds-icon>
+                        </button>
+                        <clr-dropdown-menu clrPosition="bottom-left" *clrIfOpen>
+                            <div aria-label="JSON-Formatter" clrDropdownItem (click)="onHashMethodSelect($event)">XML
+                                Validator</div>
+                            <div aria-label="JSON-Viewer" clrDropdownItem (click)="onHashMethodSelect($event)">XML
+                                Explorer</div>
+                        </clr-dropdown-menu>
+                    </clr-dropdown>
+                    <button class="btn btn-success" style="float: right;">{{ selectedJsonMethod === 'JSON Validator' ?
+                        'Validate' : 'Explore' }}</button>
+                </div>
+            </div>
+
+            <app-editor-panel language="html"></app-editor-panel>
+        </clr-tab-content>
+    </clr-tab>
+
+
+    <clr-tab>
+        <button clrTabLink>YAML</button>
+        <clr-tab-content *clrIfActive>
+            <div class="clr-row button-panel">
+                <div class="clr-col-12">
+                    <clr-dropdown>
+                        <button class="btn btn-outline-primary" clrDropdownTrigger>
+                            {{ selectedJsonMethod }}
+                            <cds-icon shape="angle" direction="down"></cds-icon>
+                        </button>
+                        <clr-dropdown-menu clrPosition="bottom-left" *clrIfOpen>
+                            <div aria-label="JSON-Formatter" clrDropdownItem (click)="onHashMethodSelect($event)">JSON
+                                Validator</div>
+                            <div aria-label="JSON-Viewer" clrDropdownItem (click)="onHashMethodSelect($event)">JSON
+                                Explorer</div>
+                        </clr-dropdown-menu>
+                    </clr-dropdown>
+                    <button class="btn btn-success" style="float: right;">{{ selectedJsonMethod === 'JSON Validator' ?
+                        'Validate' : 'Explore' }}</button>
+                </div>
+            </div>
+
+            <app-editor-panel language="yaml"></app-editor-panel>
+        </clr-tab-content>
+    </clr-tab>
+</clr-tabs>

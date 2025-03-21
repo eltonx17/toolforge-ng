@@ -30,7 +30,7 @@ export class HashGeneratorComponent implements OnInit {
       ...
   }`;
 
-  selectedHashMethod: string = 'Hashing Method';
+  selectedHashMethod: string = 'SHA-256';
 
   constructor(private themeService: ThemeService) {}
 

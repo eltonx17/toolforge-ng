@@ -13,8 +13,8 @@
         </div>
     </clr-header>
     <div class="content-container">
-        <clr-vertical-nav [clr-nav-level]="2" [clrVerticalNavCollapsible]=isNavCollapsed [clrVerticalNavCollapsed]=isNavCollapsed class="nav-trigger--bottom">
-            <a clrVerticalNavLink routerLink="/" routerLinkActive="active" [routerLinkActiveOptions]="{ exact: true }">
+        <clr-vertical-nav [clr-nav-level]="2" [clrVerticalNavCollapsible]=isNavCollapsed [clrVerticalNavCollapsed]=isNavCollapsed class="nav-trigger--bottom" (mouseenter)="isNavCollapsed = isWindowWidthGreaterThan992() ? false : isNavCollapsed" (mouseleave)="isNavCollapsed = isWindowWidthGreaterThan992() ? true : isNavCollapsed">
+            <a clrVerticalNavLink routerLink="/" routerLinkActive="active" [routerLinkActiveOptions]="{ exact: true }" >
                 <cds-icon clrVerticalNavIcon shape="home"></cds-icon>
                 Home
             </a>
@@ -23,7 +23,7 @@
                 <cds-icon clrVerticalNavIcon shape="chat-bubble"></cds-icon>
                 Converser AI
             </a>
-            <a clrVerticalNavLink routerLink="/hash-generator" outerLinkActive="active">
+            <a clrVerticalNavLink routerLink="/hash-generator" routerLinkActive="active">
                 <cds-icon clrVerticalNavIcon shape="hashtag"></cds-icon>
                 Hashers
             </a>

@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, Input } from '@angular/core';
 import { FormsModule } from '@angular/forms';
 import { RouterModule } from '@angular/router';
 import { CUSTOM_ELEMENTS_SCHEMA } from '@angular/core';
@@ -13,6 +13,7 @@ import { ThemeService } from '../../services/theme.service';
   schemas: [CUSTOM_ELEMENTS_SCHEMA]
 })
 export class EditorPanelComponent implements OnInit {
+  @Input() language: string | undefined;
   editorOptions = {
     language: 'text',
     theme: 'vs-light',
@@ -23,6 +24,7 @@ export class EditorPanelComponent implements OnInit {
   constructor(private themeService: ThemeService) {}
 
   ngOnInit() {
+    this.editorOptions = { ...this.editorOptions, language: this.language || 'text' };
     this.themeService.theme$.subscribe(theme => {
       const editorTheme = theme === 'dark' ? 'vs-dark' : 'vs-light';
       this.editorOptions = { ...this.editorOptions, theme: editorTheme };

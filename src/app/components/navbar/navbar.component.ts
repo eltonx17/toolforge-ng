@@ -21,7 +21,15 @@ export class NavbarComponent {
 
   @HostListener('window:resize', ['$event'])
   onResize(event: any) {
-    this.isNavCollapsed = event.target.innerWidth >= 992;
+    if (event.target.innerWidth >= 992) {
+      this.isNavCollapsed = true;
+    } else {
+      this.isNavCollapsed = false;
+    }
+  }
+
+  isWindowWidthGreaterThan992(): boolean {
+    return window.innerWidth >= 992;
   }
 
   ngOnInit() {

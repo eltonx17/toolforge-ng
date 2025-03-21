@@ -43,6 +43,10 @@
   padding: 0rem 1.2rem 1.2rem 1.2rem;
 }
 
+.dropdown .dropdown-toggle {
+  margin: var(--clr-btn-vertical-margin) var(--clr-btn-horizontal-margin) var(--clr-btn-vertical-margin) 0;
+}
+
 /* @media (max-width: 600px) {
   .main-container {
     height: 90vh !important;
