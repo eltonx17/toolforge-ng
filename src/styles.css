@@ -12,14 +12,24 @@
   margin-right: 0 !important;
 }
 
-.clr-toggle-wrapper input[type=checkbox]:checked + label::before {
-  border-color: hsl(118, 26%, 49%) !important;
-  background-color: hsl(118, 26%, 49%) !important;
+/* .clr-toggle-wrapper input[type=checkbox]:checked + label::before {
+  border-color: rgb(66 129 14) !important;
+  background-color: rgb(66 129 14) !important;
 }
 
 .clr-toggle-wrapper input[type=checkbox]:checked + label::after {
-  border-color: hsl(118, 26%, 49%) !important;
+  border-color: rgb(66 129 14) !important;
 }
+
+.btn.btn-success, .alert-app-level .alert-item .btn-success.btn, .btn-success .btn, .btn-success .alert-app-level .alert-item .btn, .alert-app-level .alert-item .btn-success .btn {
+  border-color: rgb(66 129 14) !important;
+  background-color: rgb(66 129 14) !important;
+}
+
+.btn.btn-info, .alert-app-level .alert-item .btn-info.btn, .btn-info .btn, .btn-info .alert-app-level .alert-item .btn, .alert-app-level .alert-item .btn-info .btn, .btn.btn-primary, .alert-app-level .alert-item .btn-primary.btn, .btn-primary .btn, .btn-primary .alert-app-level .alert-item .btn, .alert-app-level .alert-item .btn-primary .btn {
+  border-color: rgb(14, 148, 206) !important;
+  background-color: rgb(14, 148, 206) !important;
+} */
 
 .clr-form-control {
   width: 100% !important;
@@ -27,6 +37,10 @@
 
 .clr-control-container {
   width: 100% !important;
+}
+
+.main-container .content-container .content-area {
+  padding: 0rem 1.2rem 1.2rem 1.2rem;
 }
 
 /* @media (max-width: 600px) {

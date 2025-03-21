@@ -1,18 +1,18 @@
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 
-import { Sha256HashComponent } from './sha256-hash.component';
+import { HashGeneratorComponent } from './hash-generator.component';
 
-describe('Sha256HashComponent', () => {
-  let component: Sha256HashComponent;
-  let fixture: ComponentFixture<Sha256HashComponent>;
+describe('HashGeneratorComponent', () => {
+  let component: HashGeneratorComponent;
+  let fixture: ComponentFixture<HashGeneratorComponent>;
 
   beforeEach(async () => {
     await TestBed.configureTestingModule({
-      imports: [Sha256HashComponent]
+      imports: [HashGeneratorComponent]
     })
     .compileComponents();
 
-    fixture = TestBed.createComponent(Sha256HashComponent);
+    fixture = TestBed.createComponent(HashGeneratorComponent);
     component = fixture.componentInstance;
     fixture.detectChanges();
   });

@@ -26,6 +26,11 @@ export class NavbarComponent {
 
   ngOnInit() {
     this.isNavCollapsed = window.innerWidth >= 992;
+    const themeToggle = document.querySelector('#theme-toggle') as HTMLInputElement;
+    if (themeToggle) {
+      themeToggle.checked = true;
+      this.themeService.setTheme('dark');
+    }
   }
 
   toggleTheme(event: Event) {

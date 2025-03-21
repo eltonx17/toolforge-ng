@@ -3,16 +3,18 @@ import { FormsModule } from '@angular/forms';
 import { RouterModule } from '@angular/router';
 import { CUSTOM_ELEMENTS_SCHEMA } from '@angular/core';
 import { MonacoEditorModule } from 'ngx-monaco-editor-v2';
-import { ThemeService } from '../../../services/theme.service';
+import { ThemeService } from '../../services/theme.service';
+import { ClarityModule } from '@clr/angular';
+import { EditorPanelComponent } from '../editor-panel/editor-panel.component';
 
 @Component({
-  selector: 'app-sha256-hash',
-  imports: [FormsModule, RouterModule, MonacoEditorModule],
-  templateUrl: './sha256-hash.component.html',
-  styleUrl: './sha256-hash.component.css',
+  selector: 'app-hash-generator',
+  imports: [FormsModule, RouterModule, MonacoEditorModule, EditorPanelComponent, ClarityModule],
+  templateUrl: './hash-generator.component.html',
+  styleUrls: ['./hash-generator.component.css'],
   schemas: [CUSTOM_ELEMENTS_SCHEMA]
 })
-export class Sha256HashComponent implements OnInit {
+export class HashGeneratorComponent implements OnInit {
   value: string = '';
   editorOptions = {
     language: 'text',
@@ -28,6 +30,8 @@ export class Sha256HashComponent implements OnInit {
       ...
   }`;
 
+  selectedHashMethod: string = 'Hashing Method';
+
   constructor(private themeService: ThemeService) {}
 
   ngOnInit() {
@@ -35,5 +39,12 @@ export class Sha256HashComponent implements OnInit {
       const editorTheme = theme === 'dark' ? 'vs-dark' : 'vs-light';
       this.editorOptions = { ...this.editorOptions, theme: editorTheme };
     });
+  }
+
+  onHashMethodSelect(event: Event) {
+    const method = (event.target as HTMLElement).textContent?.trim();
+    if (method) {
+      this.selectedHashMethod = method;
+    }
   }
 }

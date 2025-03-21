@@ -4,6 +4,7 @@ import { Router, RouterModule } from '@angular/router';
 import { ClarityModule } from '@clr/angular';
 import { ClarityIcons, toolsIcon, cogIcon, moonIcon, sunIcon, chatBubbleIcon, 
   homeIcon, hashtagIcon, formIcon, languageIcon, boltIcon, nvmeIcon, dataClusterIcon, wrenchIcon } from '@cds/core/icon';
+import { ThemeService } from '../../services/theme.service';
 
 ClarityIcons.addIcons(toolsIcon, cogIcon, moonIcon, sunIcon, chatBubbleIcon, 
   homeIcon, hashtagIcon, formIcon, languageIcon, boltIcon, nvmeIcon, dataClusterIcon, wrenchIcon);
@@ -16,7 +17,7 @@ ClarityIcons.addIcons(toolsIcon, cogIcon, moonIcon, sunIcon, chatBubbleIcon,
 })
 export class HomeComponent {
   
-    constructor(public router: Router) {}
+    constructor(public router: Router, private themeService: ThemeService) {}
 
     isHovered: boolean[] = [false, false, false, false, false, false, false, false];
 

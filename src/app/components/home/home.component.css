@@ -6,12 +6,10 @@
     margin-left: 40%;
   }
 
-/* Add this CSS to apply a light gray shadow on hover with a subtle fade in and fade out animation */
 .card {
-  transition: box-shadow 0.15s ease-in-out;
+  transition: box-shadow 0.10s ease-in-out;
 }
-
 .card:hover {
-  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+  box-shadow: 0 2px 6px rgba(122, 118, 118, 0.449);
   cursor: pointer;
 }

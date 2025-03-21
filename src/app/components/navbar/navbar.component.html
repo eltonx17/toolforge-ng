@@ -8,7 +8,7 @@
         </div>
         <div class="header-actions" style="display: flex; align-items: center;">
             <cds-icon shape="sun" class="sun-icon margin-right"></cds-icon>
-            <input type="checkbox" (change)="toggleTheme($event)" clrToggle>
+            <input type="checkbox" id="theme-toggle" (change)="toggleTheme($event)" clrToggle checked>
             <cds-icon shape="moon" class="moon-icon margin-right"></cds-icon>
         </div>
     </clr-header>
@@ -23,7 +23,7 @@
                 <cds-icon clrVerticalNavIcon shape="chat-bubble"></cds-icon>
                 Converser AI
             </a>
-            <a clrVerticalNavLink routerLink="/sha256hash" routerLinkActive="active">
+            <a clrVerticalNavLink routerLink="/hash-generator" outerLinkActive="active">
                 <cds-icon clrVerticalNavIcon shape="hashtag"></cds-icon>
                 Hashers
             </a>

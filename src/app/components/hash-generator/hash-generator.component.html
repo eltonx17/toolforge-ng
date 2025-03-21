@@ -1,0 +1,35 @@
+<div class="clr-row">
+    <div class="clr-col-12">
+        <h3>Hash Generator</h3>
+    </div>
+</div>
+
+<div class="clr-row button-panel">
+    <div class="clr-col-12">
+        <clr-dropdown>
+            <button class="dropdown-toggle btn btn-primary" clrDropdownTrigger>
+                {{ selectedHashMethod }}
+                <cds-icon shape="angle" direction="down"></cds-icon>
+            </button>
+            <clr-dropdown-menu clrPosition="bottom-left" *clrIfOpen>
+                <label class="dropdown-header" aria-hidden="true">Hashing Methods</label>
+                <div aria-label="MD5" clrDropdownItem (click)="onHashMethodSelect($event)">MD5</div>
+                <div class="dropdown-divider" role="separator" aria-hidden="true"></div>
+                <div aria-label="SHA-1" clrDropdownItem (click)="onHashMethodSelect($event)">SHA-1</div>
+                <div aria-label="SHA-224" clrDropdownItem (click)="onHashMethodSelect($event)">SHA-224</div>
+                <div aria-label="SHA-256" clrDropdownItem (click)="onHashMethodSelect($event)">SHA-256</div>
+                <div aria-label="SHA-384" clrDropdownItem (click)="onHashMethodSelect($event)">SHA-384</div>
+                <div aria-label="SHA-512" clrDropdownItem (click)="onHashMethodSelect($event)">SHA-512</div>
+                <div class="dropdown-divider" role="separator" aria-hidden="true"></div>
+                <div aria-label="SHA3-224" clrDropdownItem (click)="onHashMethodSelect($event)">SHA3-224</div>
+                <div aria-label="SHA3-256" clrDropdownItem (click)="onHashMethodSelect($event)">SHA3-256</div>
+                <div aria-label="SHA3-384" clrDropdownItem (click)="onHashMethodSelect($event)">SHA3-384</div>
+                <div aria-label="SHA3-512" clrDropdownItem (click)="onHashMethodSelect($event)">SHA3-512</div>
+            </clr-dropdown-menu>
+        </clr-dropdown>
+        <button class="btn btn-success" style="float: right;">Compute Hash</button>
+    </div>
+</div>
+
+<app-editor-panel></app-editor-panel>
+<div class="clr-row" style="min-height: 40vh;"></div>
