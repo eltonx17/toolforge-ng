@@ -21,7 +21,10 @@
     "@cds/core": "^6.15.1",
     "@clr/angular": "^17.7.1",
     "@clr/ui": "^17.7.1",
+    "angular-resizable-element": "^7.0.2",
     "express": "^4.21.2",
+    "monaco-editor": "^0.52.2",
+    "ngx-monaco-editor-v2": "^19.0.2",
     "rxjs": "~7.8.0",
     "tslib": "^2.3.0",
     "zone.js": "~0.15.0"

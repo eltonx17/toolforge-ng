@@ -29,7 +29,7 @@
   width: 100% !important;
 }
 
-@media (max-width: 600px) {
+/* @media (max-width: 600px) {
   .main-container {
     height: 90vh !important;
   }
@@ -50,4 +50,4 @@
   .height-limit {
     height: 90vh;
   }
-}
+} */

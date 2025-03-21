@@ -2,8 +2,8 @@ import { Component, HostListener } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { RouterOutlet, Router, RouterModule } from '@angular/router';
 import { ClarityModule } from '@clr/angular';
-import { ClarityIcons, toolsIcon, cogIcon, moonIcon, sunIcon, chatBubbleIcon, 
-  homeIcon, hashtagIcon, formIcon, languageIcon, boltIcon, nvmeIcon, dataClusterIcon, wrenchIcon } from '@cds/core/icon';
+import { ClarityIcons, toolsIcon, cogIcon, moonIcon, sunIcon, chatBubbleIcon, homeIcon, hashtagIcon, formIcon, languageIcon, boltIcon, nvmeIcon, dataClusterIcon, wrenchIcon } from '@cds/core/icon';
+import { ThemeService } from '../../services/theme.service';
 
 ClarityIcons.addIcons(toolsIcon, cogIcon, moonIcon, sunIcon, chatBubbleIcon, homeIcon, hashtagIcon, formIcon, languageIcon, boltIcon, nvmeIcon, dataClusterIcon, wrenchIcon);
 
@@ -17,7 +17,7 @@ ClarityIcons.addIcons(toolsIcon, cogIcon, moonIcon, sunIcon, chatBubbleIcon, hom
 export class NavbarComponent {
   isNavCollapsed = true;
 
-  constructor(public router: Router) {}
+  constructor(public router: Router, private themeService: ThemeService) {}
 
   @HostListener('window:resize', ['$event'])
   onResize(event: any) {
@@ -31,6 +31,6 @@ export class NavbarComponent {
   toggleTheme(event: Event) {
     const isChecked = (event.target as HTMLInputElement).checked;
     const theme = isChecked ? 'dark' : 'light';
-    document.body.setAttribute('cds-theme', theme);
+    this.themeService.setTheme(theme);
   }
 }
