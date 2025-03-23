@@ -19,7 +19,7 @@
                                 Explorer</div>
                         </clr-dropdown-menu>
                     </clr-dropdown>
-                    <button class="btn btn-success" style="float: right;" (click)="validateAndFormatJson()">{{
+                    <button class="btn btn-success" style="float: right;" (click)="validateAndFormatJson()" [disabled]="!editorPanel.code">{{
                         selectedJsonMethod === 'JSON Validator' ?
                         'Validate' : 'Explore' }}</button>
                 </div>

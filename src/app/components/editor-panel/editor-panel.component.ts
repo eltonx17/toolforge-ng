@@ -61,6 +61,10 @@ export class EditorPanelComponent implements OnInit {
     this.editorOptions = { ...this.editorOptions };
   }
 
+  clearCode() {
+    this.code = '';
+  }
+
   constructor(private themeService: ThemeService) {}
 
   ngOnInit() {
