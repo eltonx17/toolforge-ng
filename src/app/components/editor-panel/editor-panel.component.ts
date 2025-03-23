@@ -5,6 +5,7 @@ import { CUSTOM_ELEMENTS_SCHEMA } from '@angular/core';
 import { MonacoEditorModule } from 'ngx-monaco-editor-v2';
 import { ThemeService } from '../../services/theme.service';
 import { ClarityModule } from '@clr/angular';
+import { MonacoConfig } from '../../monaco-config';
 
 @Component({
   selector: 'app-editor-panel',
@@ -15,16 +16,7 @@ import { ClarityModule } from '@clr/angular';
 })
 export class EditorPanelComponent implements OnInit {
   @Input() language: string | undefined;
-  editorOptions = {
-    language: 'text',
-    theme: 'vs-light',
-    minimap: { enabled: false },
-    scrollBeyondLastLine: false,
-    lineHeight: 20,
-    //fontSize: 14,
-    wordWrap: 'on',
-    wrappingIndent: 'indent',
-  };
+  editorOptions = MonacoConfig.getEditorOptions();
   code = `{
   "simple key": "simple value",
   "numbers": 1234567,
@@ -66,17 +58,16 @@ export class EditorPanelComponent implements OnInit {
 
   toggleWordWrap() {
     this.editorOptions.wordWrap = this.editorOptions.wordWrap === 'on' ? 'off' : 'on';
-    console.log('Word Wrap toggled to:', this.editorOptions.wordWrap);
-    this.editorOptions = { ...this.editorOptions }; 
+    this.editorOptions = { ...this.editorOptions };
   }
 
   constructor(private themeService: ThemeService) {}
 
   ngOnInit() {
-    this.editorOptions = { ...this.editorOptions, language: this.language || 'text' };
+    this.editorOptions = MonacoConfig.getEditorOptions(this.language || 'text');
     this.themeService.theme$.subscribe(theme => {
       const editorTheme = theme === 'dark' ? 'vs-dark' : 'vs-light';
-      this.editorOptions = { ...this.editorOptions, theme: editorTheme };
+      this.editorOptions = MonacoConfig.getEditorOptions(this.language || 'text', editorTheme);
     });
   }
 }

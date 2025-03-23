@@ -37,7 +37,9 @@
               "node_modules/@clr/ui/clr-ui.min.css",
               "src/styles.css"
             ],
-            "scripts": []
+            "scripts": [
+               "node_modules/monaco-editor/min/vs/loader.js"
+            ]
           },
           "configurations": {
             "production": {
@@ -103,7 +105,9 @@
               "node_modules/@clr/ui/clr-ui.min.css",
               "src/styles.css"
             ],
-            "scripts": []
+            "scripts": [
+               "node_modules/monaco-editor/min/vs/loader.js"
+            ]
           }
         }
       }

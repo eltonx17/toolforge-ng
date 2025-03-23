@@ -31,15 +31,13 @@ export class FormatterComponent {
       this.editorPanel.code = JSON.stringify(parsedJson, null, 2);
       this.alertMessage = 'Valid JSON';
       this.alertType = 'success';
-    } catch (e) {
-      this.alertMessage = 'Invalid JSON';
+    } catch (e: any) {
+      this.alertMessage = `Invalid JSON: ${e.message}`;
       this.alertType = 'danger';
     }
     this.showAlert = true;
-    console.log('showAlert set to true');
     setTimeout(() => {
       this.showAlert = false;
-      console.log('showAlert set to false');
-    }, 2000);
+    }, this.alertType === 'success' ? 2000 : 10000);
   }
 }
