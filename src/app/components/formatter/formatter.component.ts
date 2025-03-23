@@ -2,7 +2,7 @@ import { Component, ViewChild } from '@angular/core';
 import { RouterModule } from '@angular/router';
 import { EditorPanelComponent } from '../editor-panel/editor-panel.component';
 import { ClarityModule, ClrAlertModule } from '@clr/angular';
-import {CommonModule} from '@angular/common';
+import { CommonModule } from '@angular/common';
 
 @Component({
   selector: 'app-formatter',

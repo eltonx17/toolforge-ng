@@ -1,4 +1,5 @@
 import { Component, OnInit, Input } from '@angular/core';
+import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { RouterModule } from '@angular/router';
 import { CUSTOM_ELEMENTS_SCHEMA } from '@angular/core';
@@ -9,13 +10,14 @@ import { MonacoConfig } from '../../monaco-config';
 
 @Component({
   selector: 'app-editor-panel',
-  imports: [FormsModule, RouterModule, MonacoEditorModule, ClarityModule],
+  imports: [FormsModule, RouterModule, MonacoEditorModule, ClarityModule, CommonModule],
   templateUrl: './editor-panel.component.html',
   styleUrls: ['./editor-panel.component.css'],
   schemas: [CUSTOM_ELEMENTS_SCHEMA]
 })
 export class EditorPanelComponent implements OnInit {
   @Input() language: string | undefined;
+  @Input() controls: boolean = false;
   editorOptions = MonacoConfig.getEditorOptions();
   code = `{
   "simple key": "simple value",
