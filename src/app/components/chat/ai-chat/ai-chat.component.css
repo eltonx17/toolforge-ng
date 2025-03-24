@@ -74,7 +74,7 @@ button:hover {
   display: flex;
   flex: 1;
   overflow-y: auto;
-  margin-bottom: 1rem;
+  /* margin-bottom: 1rem; */
   flex-direction: column-reverse;
 }
 
