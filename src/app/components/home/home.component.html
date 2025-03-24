@@ -1,5 +1,5 @@
 <div class="clr-row">
-  <div class="clr-col-lg-6 clr-col-md-8 clr-col-12">
+  <div class="clr-col-lg-6 clr-col-md-6 clr-col-12">
     <div class="card" (mouseover)="showOverlay(0)" (mouseout)="hideOverlay(0)">
       <div class="card-block" routerLink="/ai-chat" routerLinkActive="active">
         <div class="card-title">
@@ -27,7 +27,7 @@
         <div class="card-text">
           <div class="clr-row">
             <div class="clr-col-11">
-              Validate and Format JSON, XML, YAML files
+              Validate and Format JSON files
             </div>
             <div class="clr-col-1">
               <cds-icon shape="arrow" direction="right" *ngIf="isHovered[1]" class="margin-left"></cds-icon>
@@ -45,7 +45,7 @@
         <div class="card-text">
           <div class="clr-row">
             <div class="clr-col-11">
-              Generate Hashes - MD5, SHA256
+              Generate Hashes
             </div>
             <div class="clr-col-1">
               <cds-icon shape="arrow" direction="right" *ngIf="isHovered[2]" class="margin-left"></cds-icon>
@@ -55,7 +55,7 @@
       </div>
     </div>
   </div>
-  <div class="clr-col-lg-6 clr-col-md-8 clr-col-12">
+  <div class="clr-col-lg-6 clr-col-md-6 clr-col-12">
     <div class="card" (mouseover)="showOverlay(3)" (mouseout)="hideOverlay(3)">
       <div class="card-block">
         <div class="card-title"><cds-icon shape="language" class="margin-right"></cds-icon>
@@ -64,7 +64,7 @@
         <div class="card-text">
           <div class="clr-row">
             <div class="clr-col-11">
-              Translate a block of code from one programming language to another
+              Translate code
             </div>
             <div class="clr-col-1">
               <cds-icon shape="arrow" direction="right" *ngIf="isHovered[3]" class="margin-left"></cds-icon>
