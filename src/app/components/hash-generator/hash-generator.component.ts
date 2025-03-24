@@ -1,50 +1,60 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, ViewChild } from '@angular/core';
+import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { RouterModule } from '@angular/router';
-import { CUSTOM_ELEMENTS_SCHEMA } from '@angular/core';
 import { MonacoEditorModule } from 'ngx-monaco-editor-v2';
-import { ThemeService } from '../../services/theme.service';
 import { ClarityModule } from '@clr/angular';
 import { EditorPanelComponent } from '../editor-panel/editor-panel.component';
+import * as CryptoJS from 'crypto-js';
 
 @Component({
   selector: 'app-hash-generator',
-  imports: [FormsModule, RouterModule, MonacoEditorModule, EditorPanelComponent, ClarityModule],
+  imports: [FormsModule, EditorPanelComponent, RouterModule, MonacoEditorModule, ClarityModule, CommonModule],
   templateUrl: './hash-generator.component.html',
-  styleUrls: ['./hash-generator.component.css'],
-  schemas: [CUSTOM_ELEMENTS_SCHEMA]
+  styleUrls: ['./hash-generator.component.css']
 })
-export class HashGeneratorComponent implements OnInit {
-  value: string = '';
-  editorOptions = {
-    language: 'text',
-    theme: 'vs-light',
-    minimap: { enabled: false },
-  };
-  code = `
-  {
-      "$schema": "http://json-schema.org/draft-07/schema",
-      "title": "ng-packagr Target",
-      "description": "ng-packagr target options for Build Architect. Use to build library projects.",
-      "type": "object",  
-      ...
-  }`;
+export class HashGeneratorComponent {
+  @ViewChild(EditorPanelComponent) editorPanel!: EditorPanelComponent;
 
-  selectedHashMethod: string = 'SHA-256';
+  selectedMethod: string = 'Hash';
 
-  constructor(private themeService: ThemeService) {}
-
-  ngOnInit() {
-    this.themeService.theme$.subscribe(theme => {
-      const editorTheme = theme === 'dark' ? 'vs-dark' : 'vs-light';
-      this.editorOptions = { ...this.editorOptions, theme: editorTheme };
-    });
-  }
-
-  onHashMethodSelect(event: Event) {
+  onMethodSelect(event: Event) {
     const method = (event.target as HTMLElement).textContent?.trim();
     if (method) {
-      this.selectedHashMethod = method;
+      this.selectedMethod = method;
     }
   }
+
+
+  md5Hash: string = "";
+  sha1Hash: string = "";
+  sha224Hash: string = "";
+  sha256Hash: string = "";
+  sha384Hash: string = "";
+  sha512Hash: string = "";
+  sha3Hash: string = "";
+  generateHashes() {
+    const message = this.editorPanel.code
+    this.md5Hash = CryptoJS.MD5(message).toString();
+    this.sha1Hash = CryptoJS.SHA1(message).toString();
+    this.sha224Hash = CryptoJS.SHA224(message).toString();
+    this.sha256Hash = CryptoJS.SHA256(message).toString();
+    this.sha384Hash = CryptoJS.SHA384(message).toString();
+    this.sha512Hash = CryptoJS.SHA512(message).toString();
+    this.sha3Hash = CryptoJS.SHA3(message, { outputLength: 512 }).toString();
+  }
+
+  copyToClipboard(text: string, event: Event) {
+    if (!text) return;
+
+    navigator.clipboard.writeText(text).then(() => {
+        const button = event.target as HTMLButtonElement;
+        button.textContent = 'Copied!';
+        setTimeout(() => {
+            button.textContent = button.getAttribute('data-original-text') || 'Copy';
+        }, 2000);
+    }).catch(() => {
+        // Handle copy error if needed
+    });
+}
 }

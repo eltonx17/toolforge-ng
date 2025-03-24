@@ -1,8 +1,27 @@
 .button-panel {
-    margin-top: 20px;
-  }
+  margin-top: 20px;
+}
 
+.copy-button {
+  margin-top: calc(5* var(--clr-forms-baseline));
+  float: right;
+}
+
+@media (min-width: 767.5px) {
+  .text-width {
+    width: calc(100vw - 65vw)
+  }
+}
+
+@media (max-width: 767.5px) {
+  .text-width {
+    width: calc(100vw - 39vw);
+  }
+}
+
+@media (max-width: 767.5px) {
   .copy-button {
-    margin-top: calc(5* var(--clr-forms-baseline));
+    margin-top: calc(8.5 * var(--clr-forms-baseline));
     float: right;
   }
+}

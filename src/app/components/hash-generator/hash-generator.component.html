@@ -5,163 +5,130 @@
 </div> -->
 
 <div class="clr-row button-panel">
-    <div class="clr-col-12">
-        <clr-dropdown>
-            <button class="dropdown-toggle btn btn-primary" clrDropdownTrigger>
-                {{ selectedHashMethod }}
-                <cds-icon shape="angle" direction="down"></cds-icon>
-            </button>
-            <clr-dropdown-menu clrPosition="bottom-left" *clrIfOpen>
-                <label class="dropdown-header" aria-hidden="true">Hashing Methods</label>
-                <div aria-label="MD5" clrDropdownItem (click)="onHashMethodSelect($event)">MD5</div>
-                <div class="dropdown-divider" role="separator" aria-hidden="true"></div>
-                <div aria-label="SHA-1" clrDropdownItem (click)="onHashMethodSelect($event)">SHA-1</div>
-                <div aria-label="SHA-224" clrDropdownItem (click)="onHashMethodSelect($event)">SHA-224</div>
-                <div aria-label="SHA-256" clrDropdownItem (click)="onHashMethodSelect($event)">SHA-256</div>
-                <div aria-label="SHA-384" clrDropdownItem (click)="onHashMethodSelect($event)">SHA-384</div>
-                <div aria-label="SHA-512" clrDropdownItem (click)="onHashMethodSelect($event)">SHA-512</div>
-                <div class="dropdown-divider" role="separator" aria-hidden="true"></div>
-                <div aria-label="SHA3-224" clrDropdownItem (click)="onHashMethodSelect($event)">SHA3-224</div>
-                <div aria-label="SHA3-256" clrDropdownItem (click)="onHashMethodSelect($event)">SHA3-256</div>
-                <div aria-label="SHA3-384" clrDropdownItem (click)="onHashMethodSelect($event)">SHA3-384</div>
-                <div aria-label="SHA3-512" clrDropdownItem (click)="onHashMethodSelect($event)">SHA3-512</div>
-            </clr-dropdown-menu>
-        </clr-dropdown>
-        <button class="btn btn-success" style="float: right;">Compute Hash</button>
+    <div class="clr-col-5">
+        <h5>Hash Generator</h5>
+    </div>
+    <div class="clr-col-7">
+        <button class="btn btn-success" style="float: right;" (click)="generateHashes()" [disabled]="!editorPanel?.code">Compute Hash</button>
     </div>
 </div>
 <div class="clr-row">
-    <div class="clr-col-lg-6 clr-col-md-6 clr-col-12">
+    <div class="clr-col-lg-5 clr-col-md-5 clr-col-12">
         <app-editor-panel></app-editor-panel>
     </div>
-    <div class="clr-col-lg-6 clr-col-md-6 clr-col-12">
+    <div class="clr-col-lg-7 clr-col-md-7 clr-col-12">
         <div class="clr-row">
-            <div class="clr-col-lg-10 clr-col-md-6 clr-col-12">
+            <div class="clr-col-11">
                 <form clrForm>
                     <clr-input-container>
                         <label>MD5</label>
-                        <input clrInput name="name" style="width: 90vw" />
+                        <input clrInput name="name" class="text-width" [(ngModel)]="md5Hash" />
                     </clr-input-container>
 
                 </form>
             </div>
-            <div class="clr-col-lg-2 clr-col-md-6 clr-col-12">
+            <div class="clr-col-1">
                 <div class="btn-outline-primary btn-sm tool-button">
-                    <button class="btn copy-button">Copy</button>
+                    <button class="btn copy-button" (click)="copyToClipboard(md5Hash, $event)">Copy</button>
                 </div>
             </div>
         </div>
         <div class="clr-row">
-            <div class="clr-col-lg-10 clr-col-md-6 clr-col-12">
+            <div class="clr-col-11">
                 <form clrForm>
                     <clr-input-container>
                         <label>SHA-1</label>
-                        <input clrInput name="name" style="width: 90vw" />
+                        <input clrInput name="name" class="text-width" [(ngModel)]="sha1Hash" />
                     </clr-input-container>
 
                 </form>
             </div>
-            <div class="clr-col-lg-2 clr-col-md-6 clr-col-12">
+            <div class="clr-col-1">
                 <div class="btn-outline-primary btn-sm tool-button">
-                    <button class="btn copy-button">Copy</button>
+                    <button class="btn copy-button" (click)="copyToClipboard(sha1Hash, $event)">Copy</button>
                 </div>
             </div>
         </div>
         <div class="clr-row">
-            <div class="clr-col-lg-10 clr-col-md-6 clr-col-12">
+            <div class="clr-col-11">
                 <form clrForm>
                     <clr-input-container>
                         <label>SHA-224</label>
-                        <input clrInput name="name" style="width: 90vw" />
+                        <input clrInput name="name" class="text-width" [(ngModel)]="sha224Hash"  />
                     </clr-input-container>
 
                 </form>
             </div>
-            <div class="clr-col-lg-2 clr-col-md-6 clr-col-12">
+            <div class="clr-col-1">
                 <div class="btn-outline-primary btn-sm tool-button">
-                    <button class="btn copy-button">Copy</button>
+                    <button class="btn copy-button" (click)="copyToClipboard(sha224Hash, $event)">Copy</button>
                 </div>
             </div>
         </div>
         <div class="clr-row">
-            <div class="clr-col-lg-10 clr-col-md-6 clr-col-12">
+            <div class="clr-col-11">
                 <form clrForm>
                     <clr-input-container>
                         <label>SHA-256</label>
-                        <input clrInput name="name" style="width: 90vw" />
+                        <input clrInput name="name" class="text-width" [(ngModel)]="sha256Hash"  />
                     </clr-input-container>
 
                 </form>
             </div>
-            <div class="clr-col-lg-2 clr-col-md-6 clr-col-12">
+            <div class="clr-col-1">
                 <div class="btn-outline-primary btn-sm tool-button">
-                    <button class="btn copy-button">Copy</button>
+                    <button class="btn copy-button" (click)="copyToClipboard(sha256Hash, $event)">Copy</button>
                 </div>
             </div>
         </div>
         <div class="clr-row">
-            <div class="clr-col-lg-10 clr-col-md-6 clr-col-12">
+            <div class="clr-col-11">
                 <form clrForm>
                     <clr-input-container>
                         <label>SHA-384</label>
-                        <input clrInput name="name" style="width: 90vw" />
+                        <input clrInput name="name" class="text-width" [(ngModel)]="sha384Hash"  />
                     </clr-input-container>
 
                 </form>
             </div>
-            <div class="clr-col-lg-2 clr-col-md-6 clr-col-12">
+            <div class="clr-col-1">
                 <div class="btn-outline-primary btn-sm tool-button">
-                    <button class="btn copy-button">Copy</button>
+                    <button class="btn copy-button" (click)="copyToClipboard(sha384Hash, $event)">Copy</button>
                 </div>
             </div>
         </div>
         <div class="clr-row">
-            <div class="clr-col-lg-10 clr-col-md-6 clr-col-12">
+            <div class="clr-col-11">
                 <form clrForm>
                     <clr-input-container>
                         <label>SHA-512</label>
-                        <input clrInput name="name" style="width: 90vw" />
+                        <input clrInput name="name" class="text-width" [(ngModel)]="sha512Hash"  />
                     </clr-input-container>
 
                 </form>
             </div>
-            <div class="clr-col-lg-2 clr-col-md-6 clr-col-12">
+            <div class="clr-col-1">
                 <div class="btn-outline-primary btn-sm tool-button">
-                    <button class="btn copy-button">Copy</button>
+                    <button class="btn copy-button" (click)="copyToClipboard(sha512Hash, $event)">Copy</button>
                 </div>
             </div>
         </div>
         <div class="clr-row">
-            <div class="clr-col-lg-10 clr-col-md-6 clr-col-12">
+            <div class="clr-col-11">
                 <form clrForm>
                     <clr-input-container>
-                        <label>SHA3-224</label>
-                        <input clrInput name="name" style="width: 90vw" />
+                        <label>SHA-3</label>
+                        <input clrInput name="name" class="text-width" [(ngModel)]="sha3Hash"  />
                     </clr-input-container>
 
                 </form>
             </div>
-            <div class="clr-col-lg-2 clr-col-md-6 clr-col-12">
+            <div class="clr-col-1">
                 <div class="btn-outline-primary btn-sm tool-button">
-                    <button class="btn copy-button">Copy</button>
+                    <button class="btn copy-button" (click)="copyToClipboard(sha3Hash, $event)">Copy</button>
                 </div>
             </div>
         </div>
-        <div class="clr-row">
-            <div class="clr-col-lg-10 clr-col-md-6 clr-col-12">
-                <form clrForm>
-                    <clr-input-container>
-                        <label>SHA3-256</label>
-                        <input clrInput name="name" style="width: 90vw" />
-                    </clr-input-container>
-
-                </form>
-            </div>
-            <div class="clr-col-lg-2 clr-col-md-6 clr-col-12">
-                <div class="btn-outline-primary btn-sm tool-button">
-                    <button class="btn copy-button">Copy</button>
-                </div>
-            </div>
-        </div>
+        
     </div>
 </div>
