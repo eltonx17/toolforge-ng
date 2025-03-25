@@ -10,11 +10,26 @@
             <cds-icon shape="sun" class="sun-icon margin-right"></cds-icon>
             <input type="checkbox" id="theme-toggle" (change)="toggleTheme($event)" clrToggle checked>
             <cds-icon shape="moon" class="moon-icon margin-right"></cds-icon>
+            <a class="nav-link nav-text" *ngIf="isWindowWidthGreaterThan992()" routerLink="/login" routerLinkActive="active">Login</a>
+            <!-- <clr-dropdown>
+                <button class="nav-text" clrDropdownTrigger aria-label="open user profile">
+                    <cds-icon shape="user"></cds-icon>
+                    Elton
+                    <cds-icon shape="angle" direction="down"></cds-icon>
+                </button>
+                <clr-dropdown-menu *clrIfOpen clrPosition="bottom-right">
+                    <a href="..." clrDropdownItem>Preferences</a>
+                    <a href="..." clrDropdownItem>Log out</a>
+                </clr-dropdown-menu>
+            </clr-dropdown> -->
         </div>
     </clr-header>
     <div class="content-container">
-        <clr-vertical-nav [clr-nav-level]="2" [clrVerticalNavCollapsible]=isNavCollapsed [clrVerticalNavCollapsed]=isNavCollapsed class="nav-trigger--bottom" (mouseenter)="isNavCollapsed = isWindowWidthGreaterThan992() ? false : isNavCollapsed" (mouseleave)="isNavCollapsed = isWindowWidthGreaterThan992() ? true : isNavCollapsed">
-            <a clrVerticalNavLink routerLink="/" routerLinkActive="active" [routerLinkActiveOptions]="{ exact: true }" >
+        <clr-vertical-nav [clr-nav-level]="2" [clrVerticalNavCollapsible]=isNavCollapsed
+            [clrVerticalNavCollapsed]=isNavCollapsed class="nav-trigger--bottom"
+            (mouseenter)="isNavCollapsed = isWindowWidthGreaterThan992() ? false : isNavCollapsed"
+            (mouseleave)="isNavCollapsed = isWindowWidthGreaterThan992() ? true : isNavCollapsed">
+            <a clrVerticalNavLink routerLink="/" routerLinkActive="active" [routerLinkActiveOptions]="{ exact: true }">
                 <cds-icon clrVerticalNavIcon shape="home"></cds-icon>
                 Home
             </a>
@@ -39,11 +54,17 @@
                 <cds-icon clrVerticalNavIcon shape="language"></cds-icon>
                 Translators
             </a>
+            <div class="dropdown-divider" role="separator" aria-hidden="true"></div>
             <a clrVerticalNavLink routerLink="/api-tester" routerLinkActive="active">
                 <cds-icon clrVerticalNavIcon shape="bolt"></cds-icon>
                 API Tester
             </a>
-        </clr-vertical-nav> 
+            <div class="nav-divider" *ngIf="!isWindowWidthGreaterThan992()"></div>
+            <a clrVerticalNavLink *ngIf="!isWindowWidthGreaterThan992()" routerLink="/api-tester" routerLinkActive="active">
+                <cds-icon clrVerticalNavIcon shape="user"></cds-icon>
+                Login
+            </a>
+        </clr-vertical-nav>
         <div class="content-container">
             <div class="content-area">
                 <router-outlet></router-outlet>

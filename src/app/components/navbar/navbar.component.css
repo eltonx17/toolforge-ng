@@ -20,3 +20,7 @@
 .clr-vertical-nav.collapsed+.content-container {
   margin-left: 0;
 }
+
+.login-icon {
+  margin-right: 6px;
+}
