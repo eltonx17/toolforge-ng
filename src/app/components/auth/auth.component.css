@@ -18,3 +18,41 @@
 .login-wrapper .login:after {
     display: none;
 }
+
+.divider {
+    display: flex;
+    align-items: center;
+    text-align: center;
+    margin: 1rem 0;
+}
+
+.divider::before,
+.divider::after {
+    content: '';
+    flex: 1;
+    border-bottom: 1px solid #ccc;
+}
+
+.divider span {
+    padding: 0 10px;
+    color: #666;
+    font-size: 0.9rem;
+}
+
+.btn-outline {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 0.5rem;
+    width: 100%;
+    margin-bottom: 1rem;
+}
+
+.btn-outline cds-icon {
+    width: 18px;
+    height: 18px;
+}
+
+.login-wrapper .login .login-group .clr-checkbox-wrapper {
+    margin: 0 0 3vh 0;
+}

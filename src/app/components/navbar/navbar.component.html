@@ -10,18 +10,17 @@
             <cds-icon shape="sun" class="sun-icon margin-right"></cds-icon>
             <input type="checkbox" id="theme-toggle" (change)="toggleTheme($event)" clrToggle checked>
             <cds-icon shape="moon" class="moon-icon margin-right"></cds-icon>
-            <a class="nav-link nav-text" *ngIf="isWindowWidthGreaterThan992()" routerLink="/login" routerLinkActive="active">Login</a>
-            <!-- <clr-dropdown>
+            <a class="nav-link nav-text" *ngIf="!currentUser && isWindowWidthGreaterThan992()" routerLink="/login" routerLinkActive="active">Login</a>
+            <clr-dropdown *ngIf="currentUser">
                 <button class="nav-text" clrDropdownTrigger aria-label="open user profile">
                     <cds-icon shape="user"></cds-icon>
-                    Elton
+                    {{ userFirstName }}
                     <cds-icon shape="angle" direction="down"></cds-icon>
                 </button>
                 <clr-dropdown-menu *clrIfOpen clrPosition="bottom-right">
-                    <a href="..." clrDropdownItem>Preferences</a>
-                    <a href="..." clrDropdownItem>Log out</a>
+                    <a (click)="logout()" clrDropdownItem>Log out</a>
                 </clr-dropdown-menu>
-            </clr-dropdown> -->
+            </clr-dropdown>
         </div>
     </clr-header>
     <div class="content-container">
@@ -60,9 +59,13 @@
                 API Tester
             </a>
             <div class="nav-divider" *ngIf="!isWindowWidthGreaterThan992()"></div>
-            <a clrVerticalNavLink *ngIf="!isWindowWidthGreaterThan992()" routerLink="/login" routerLinkActive="active">
+            <a clrVerticalNavLink *ngIf="!currentUser && !isWindowWidthGreaterThan992()" routerLink="/login" routerLinkActive="active">
                 <cds-icon clrVerticalNavIcon shape="user"></cds-icon>
                 Login
+            </a>
+            <a clrVerticalNavLink *ngIf="currentUser && !isWindowWidthGreaterThan992()" (click)="logout()">
+                <cds-icon clrVerticalNavIcon shape="logout"></cds-icon>
+                Logout
             </a>
         </clr-vertical-nav>
         <div class="content-container">

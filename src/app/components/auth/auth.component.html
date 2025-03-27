@@ -25,8 +25,15 @@
                             <label>Remember me</label>
                             <input type="checkbox" name="rememberMe" clrCheckbox />
                         </clr-checkbox-wrapper>
-                        <div class="error active">Invalid user name or password</div>
+                        <!-- <div class="error active">Invalid user name or password</div> -->
                         <button type="submit" class="btn btn-primary">Log in</button>
+                        <div class="divider">
+                            <span>or</span>
+                        </div>
+                        <button type="button" class="btn btn-outline" (click)="loginWithGoogle()" [disabled]="showSpinner">
+                            <img src="google.svg" alt="Google logo" style="width: 18px; height: 18px; margin-right: 8px;">
+                            Sign in with Google
+                        </button>
                         <a href="javascript://" class="signup">Sign up for an account</a>
                     </div>
                 </div>

@@ -1,20 +1,44 @@
 import { Injectable } from '@angular/core';
-import { Auth, signInWithPopup, GoogleAuthProvider, signOut } from '@angular/fire/auth';
-import { from } from 'rxjs';
+import { Auth, signInWithPopup, GoogleAuthProvider, signOut, setPersistence, browserLocalPersistence, browserSessionPersistence, User } from '@angular/fire/auth';
+import { from, Observable, BehaviorSubject } from 'rxjs';
+import { map, switchMap } from 'rxjs/operators';
 
 @Injectable({
   providedIn: 'root'
 })
 export class AuthService {
+  private currentUserSubject = new BehaviorSubject<User | null>(null);
+  currentUser$ = this.currentUserSubject.asObservable();
 
-  constructor(private auth: Auth) {}
+  constructor(private auth: Auth) {
+    // Listen for auth state changes
+    this.auth.onAuthStateChanged((user) => {
+      this.currentUserSubject.next(user);
+    });
+  }
 
-  googleSignIn() {
+  googleSignIn(rememberMe: boolean = false): Observable<User> {
     const provider = new GoogleAuthProvider();
-    return from(signInWithPopup(this.auth, provider));
+    return from(setPersistence(this.auth, rememberMe ? browserLocalPersistence : browserSessionPersistence))
+      .pipe(
+        switchMap(() => from(signInWithPopup(this.auth, provider))),
+        map(result => result.user)
+      );
   }
 
   logout() {
     return from(signOut(this.auth));
+  }
+
+  getCurrentUser(): User | null {
+    return this.auth.currentUser;
+  }
+
+  getUserFirstName(): string | null {
+    const user = this.getCurrentUser();
+    if (user?.displayName) {
+      return user.displayName.split(' ')[0];
+    }
+    return null;
   }
 }

@@ -24,6 +24,7 @@ export class AuthComponent {
   newPassword: string = '';
   confirmPassword: string = '';
   otp: string = '';
+  rememberMe: boolean = false;
   
   // State properties
   signupMode: boolean = false;
@@ -43,7 +44,7 @@ export class AuthComponent {
   resetError: string = '';
   otpResponse: boolean = false;
 
-  constructor(private authService: AuthService) {}
+  constructor(private authService: AuthService, private router: Router) {}
 
   // Authentication methods
   login() {
@@ -105,9 +106,20 @@ export class AuthComponent {
   }
 
   loginWithGoogle() {
-    this.authService.googleSignIn().subscribe((res) => {
-      this.user = res.user;
-      console.log('User Logged In:', this.user);
+    this.showSpinner = true;
+    this.error = null;
+    this.authService.googleSignIn(this.rememberMe).subscribe({
+      next: (user) => {
+        this.user = user;
+        console.log('User Logged In:', this.user);
+        this.showSpinner = false;
+        this.router.navigate(['/']);
+      },
+      error: (err) => {
+        console.error('Google Sign In Error:', err);
+        this.error = 'Failed to sign in with Google. Please try again.';
+        this.showSpinner = false;
+      }
     });
   }
 
@@ -115,6 +127,7 @@ export class AuthComponent {
     this.authService.logout().subscribe(() => {
       this.user = null;
       console.log('User Logged Out');
+      this.router.navigate(['/login']);
     });
   }
 }
