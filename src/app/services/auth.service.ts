@@ -1,7 +1,7 @@
 import { Injectable } from '@angular/core';
 import { Auth, signInWithPopup, GoogleAuthProvider, signOut, setPersistence, browserLocalPersistence, browserSessionPersistence, User, createUserWithEmailAndPassword, signInWithEmailAndPassword, indexedDBLocalPersistence } from '@angular/fire/auth';
 import { from, Observable, ReplaySubject, BehaviorSubject, of } from 'rxjs';
-import { map, switchMap, take, filter } from 'rxjs/operators';
+import { map, switchMap, take, filter, tap } from 'rxjs/operators';
 
 @Injectable({
   providedIn: 'root'
@@ -47,34 +47,19 @@ export class AuthService {
   }
 
   private setPersistence(rememberMe: boolean): Observable<void> {
-    return from(setPersistence(
-      this.auth,
-      indexedDBLocalPersistence
-    )).pipe(
-      map(() => {
+    return from(setPersistence(this.auth, indexedDBLocalPersistence)).pipe(
+      tap(() => {
         if (!rememberMe) {
-          // For session-only storage, we'll set up a session timeout
-          const sessionTimeout = 24 * 60 * 60 * 1000; // 24 hours
-          const sessionKey = 'auth_session_timeout';
-          
-          // Set session timeout
-          const timeout = Date.now() + sessionTimeout;
-          localStorage.setItem(sessionKey, timeout.toString());
-          
-          // Check session timeout on auth state changes
-          this.auth.onAuthStateChanged((user) => {
-            if (user) {
-              const storedTimeout = localStorage.getItem(sessionKey);
-              if (storedTimeout && Date.now() > parseInt(storedTimeout)) {
-                // Session expired, sign out
-                this.logout();
-              }
-            }
-          });
+          this.clearSessionOnClose();
         }
-        return;
       })
     );
+  }
+
+  private clearSessionOnClose() {
+    window.addEventListener("beforeunload", () => {
+      indexedDB.deleteDatabase("firebaseLocalStorageDb");
+    });
   }
 
   signUp(email: string, password: string, rememberMe: boolean = false): Observable<User> {
