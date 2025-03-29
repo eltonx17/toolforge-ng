@@ -19,30 +19,14 @@ export class AuthComponent {
   user: any = null;
   email: string = '';
   password: string = '';
-  fname: string = '';
-  lname: string = '';
-  newPassword: string = '';
-  confirmPassword: string = '';
-  otp: string = '';
-  rememberMe: boolean = false;
+  rememberMe: boolean = true;
   
   // State properties
   signupMode: boolean = false;
-  otpSent: boolean = false;
-  otpVerified: boolean = false;
-  otpResent: boolean = false;
   showSpinner: boolean = false;
-  forgotModal: boolean = false;
-  passChanged: boolean = false;
-  userValid: boolean = false;
-  isMatch: boolean = false;
   
-  // Error and message properties
+  // Error property
   error: string | null = null;
-  registerMailExists: string = '';
-  newPassMsg: string = '';
-  resetError: string = '';
-  otpResponse: boolean = false;
 
   constructor(private authService: AuthService, private router: Router) {}
 
@@ -98,56 +82,6 @@ export class AuthComponent {
         this.showSpinner = false;
       }
     });
-  }
-
-  verifyAccount() {
-    // Implementation needed
-  }
-
-  // Password reset methods
-  openModal() {
-    this.forgotModal = true;
-  }
-
-  closeModal() {
-    this.forgotModal = false;
-    this.resetState();
-  }
-
-  sendOtp() {
-    // Implementation needed
-  }
-
-  verifyOtp() {
-    // Implementation needed
-  }
-
-  changePassword() {
-    // Implementation needed
-  }
-
-  // Helper methods
-  checkEmail(event: any) {
-    // Implementation needed
-  }
-
-  comparePassword(event: any) {
-    // Implementation needed
-  }
-
-  resendOtp() {
-    // Implementation needed
-  }
-
-  resetState() {
-    this.otpSent = false;
-    this.otpVerified = false;
-    this.passChanged = false;
-    this.error = null;
-    this.resetError = '';
-    this.otp = '';
-    this.newPassword = '';
-    this.confirmPassword = '';
   }
 
   loginWithGoogle() {
