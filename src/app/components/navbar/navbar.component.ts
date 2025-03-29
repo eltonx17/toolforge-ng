@@ -1,4 +1,4 @@
-import { Component, HostListener, OnInit } from '@angular/core';
+import { Component, HostListener, OnInit, OnDestroy } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { RouterOutlet, Router, RouterModule } from '@angular/router';
 import { ClarityModule } from '@clr/angular';
@@ -6,6 +6,7 @@ import { ClarityIcons, toolsIcon, cogIcon, moonIcon, sunIcon, chatBubbleIcon, ho
 import { ThemeService } from '../../services/theme.service';
 import { AuthService } from '../../services/auth.service';
 import { User } from '@angular/fire/auth';
+import { Subscription } from 'rxjs';
 
 ClarityIcons.addIcons(toolsIcon, cogIcon, moonIcon, sunIcon, chatBubbleIcon, homeIcon, hashtagIcon, formIcon, languageIcon, boltIcon, nvmeIcon, dataClusterIcon, wrenchIcon, userIcon);
 
@@ -16,10 +17,11 @@ ClarityIcons.addIcons(toolsIcon, cogIcon, moonIcon, sunIcon, chatBubbleIcon, hom
   templateUrl: './navbar.component.html',
   styleUrl: './navbar.component.css'
 })
-export class NavbarComponent implements OnInit {
+export class NavbarComponent implements OnInit, OnDestroy {
   isNavCollapsed = true;
   currentUser: User | null = null;
   userFirstName: string | null = null;
+  private authSubscription: Subscription | null = null;
 
   constructor(
     public router: Router, 
@@ -48,11 +50,23 @@ export class NavbarComponent implements OnInit {
       this.themeService.setTheme('dark');
     }
 
-    // Subscribe to auth state changes
-    this.authService.currentUser$.subscribe(user => {
-      this.currentUser = user;
+    // Wait for initial auth state and then subscribe to changes
+    this.authService.waitForInitialAuth().subscribe(initialUser => {
+      this.currentUser = initialUser;
       this.userFirstName = this.authService.getUserFirstName();
+      
+      // Subscribe to subsequent changes
+      this.authSubscription = this.authService.currentUser$.subscribe(user => {
+        this.currentUser = user;
+        this.userFirstName = this.authService.getUserFirstName();
+      });
     });
+  }
+
+  ngOnDestroy() {
+    if (this.authSubscription) {
+      this.authSubscription.unsubscribe();
+    }
   }
 
   toggleTheme(event: Event) {
