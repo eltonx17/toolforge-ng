@@ -1,7 +1,7 @@
 <div class="clr-row center-align">
     <div class="clr-col-12 center-align">
-        <div class="login-wrapper ">
-            <form class="login">
+        <div class="login-wrapper">
+            <form class="login" (ngSubmit)="signupMode ? signUp() : login()">
                 <div class="login-header">
                 </div>
                 <div class="login-body">
@@ -13,20 +13,22 @@
                     <div class="login-group">
                         <clr-input-container>
                             <label class="clr-sr-only">E-mail</label>
-                            <input type="text" autocomplete="username" name="username" clrInput
-                                placeholder="Enter e-mail" />
+                            <input type="email" autocomplete="username" name="username" clrInput
+                                [(ngModel)]="email" placeholder="Enter e-mail" />
                         </clr-input-container>
                         <clr-password-container>
                             <label class="clr-sr-only">Password</label>
                             <input type="password" autocomplete="current-password" name="password" clrPassword
-                                placeholder="Enter password" />
+                                [(ngModel)]="password" placeholder="Enter password" />
                         </clr-password-container>
                         <clr-checkbox-wrapper>
                             <label>Remember me</label>
-                            <input type="checkbox" name="rememberMe" clrCheckbox />
+                            <input type="checkbox" name="rememberMe" clrCheckbox [(ngModel)]="rememberMe" />
                         </clr-checkbox-wrapper>
-                        <!-- <div class="error active">Invalid user name or password</div> -->
-                        <button type="submit" class="btn btn-primary">Log in</button>
+                        <div class="error" [class.active]="error">{{error}}</div>
+                        <button type="submit" class="btn btn-primary" [disabled]="showSpinner">
+                            {{signupMode ? 'Sign Up' : 'Log in'}}
+                        </button>
                         <div class="divider">
                             <span>or</span>
                         </div>
@@ -34,7 +36,9 @@
                             <img src="google.svg" alt="Google logo" style="width: 18px; height: 18px; margin-right: 8px;">
                             Sign in with Google
                         </button>
-                        <a href="javascript://" class="signup">Sign up for an account</a>
+                        <a href="javascript://" class="signup" (click)="toggleSignupMode()">
+                            {{signupMode ? 'Already have an account? Log in' : 'Sign up for an account'}}
+                        </a>
                     </div>
                 </div>
                 <div class="login-footer">

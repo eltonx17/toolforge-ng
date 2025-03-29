@@ -1,5 +1,5 @@
 import { Injectable } from '@angular/core';
-import { Auth, signInWithPopup, GoogleAuthProvider, signOut, setPersistence, browserLocalPersistence, browserSessionPersistence, User } from '@angular/fire/auth';
+import { Auth, signInWithPopup, GoogleAuthProvider, signOut, setPersistence, browserLocalPersistence, browserSessionPersistence, User, createUserWithEmailAndPassword, signInWithEmailAndPassword } from '@angular/fire/auth';
 import { from, Observable, BehaviorSubject } from 'rxjs';
 import { map, switchMap } from 'rxjs/operators';
 
@@ -17,13 +17,33 @@ export class AuthService {
     });
   }
 
+  private setPersistence(rememberMe: boolean): Observable<void> {
+    return from(setPersistence(
+      this.auth,
+      rememberMe ? browserLocalPersistence : browserSessionPersistence
+    ));
+  }
+
+  signUp(email: string, password: string, rememberMe: boolean = false): Observable<User> {
+    return this.setPersistence(rememberMe).pipe(
+      switchMap(() => from(createUserWithEmailAndPassword(this.auth, email, password))),
+      map(result => result.user)
+    );
+  }
+
+  signIn(email: string, password: string, rememberMe: boolean = false): Observable<User> {
+    return this.setPersistence(rememberMe).pipe(
+      switchMap(() => from(signInWithEmailAndPassword(this.auth, email, password))),
+      map(result => result.user)
+    );
+  }
+
   googleSignIn(rememberMe: boolean = false): Observable<User> {
     const provider = new GoogleAuthProvider();
-    return from(setPersistence(this.auth, rememberMe ? browserLocalPersistence : browserSessionPersistence))
-      .pipe(
-        switchMap(() => from(signInWithPopup(this.auth, provider))),
-        map(result => result.user)
-      );
+    return this.setPersistence(rememberMe).pipe(
+      switchMap(() => from(signInWithPopup(this.auth, provider))),
+      map(result => result.user)
+    );
   }
 
   logout() {

@@ -48,11 +48,56 @@ export class AuthComponent {
 
   // Authentication methods
   login() {
-    // Implementation needed
+    if (!this.email || !this.password) {
+      this.error = 'Please enter both email and password';
+      return;
+    }
+
+    this.showSpinner = true;
+    this.error = null;
+    
+    this.authService.signIn(this.email, this.password, this.rememberMe).subscribe({
+      next: (user) => {
+        this.user = user;
+        console.log('User Logged In:', this.user);
+        this.showSpinner = false;
+        this.router.navigate(['/']);
+      },
+      error: (err) => {
+        console.error('Login Error:', err);
+        this.error = 'Invalid email or password';
+        this.showSpinner = false;
+      }
+    });
   }
 
   signUp() {
-    // Implementation needed
+    if (!this.email || !this.password) {
+      this.error = 'Please enter both email and password';
+      return;
+    }
+
+    if (this.password.length < 6) {
+      this.error = 'Password must be at least 6 characters long';
+      return;
+    }
+
+    this.showSpinner = true;
+    this.error = null;
+
+    this.authService.signUp(this.email, this.password, this.rememberMe).subscribe({
+      next: (user) => {
+        this.user = user;
+        console.log('User Signed Up:', this.user);
+        this.showSpinner = false;
+        this.router.navigate(['/']);
+      },
+      error: (err) => {
+        console.error('Sign Up Error:', err);
+        this.error = err.message;
+        this.showSpinner = false;
+      }
+    });
   }
 
   verifyAccount() {
@@ -129,5 +174,10 @@ export class AuthComponent {
       console.log('User Logged Out');
       this.router.navigate(['/login']);
     });
+  }
+
+  toggleSignupMode() {
+    this.signupMode = !this.signupMode;
+    this.error = null;
   }
 }
