@@ -13,10 +13,10 @@
                         <clr-dropdown-menu clrPosition="bottom-left" *clrIfOpen>
                             <div aria-label="JSON-Formatter" clrDropdownItem (click)="onHashMethodSelect($event)">JSON
                                 Validator</div>
-                            <div aria-label="JSON-Diff" clrDropdownItem (click)="onHashMethodSelect($event)">JSON
+                            <!-- <div aria-label="JSON-Diff" clrDropdownItem (click)="onHashMethodSelect($event)">JSON
                                     Diff</div>
                             <div aria-label="JSON-Explorer" clrDropdownItem (click)="onHashMethodSelect($event)">JSON
-                                Explorer</div>
+                                Explorer</div> -->
                         </clr-dropdown-menu>
                     </clr-dropdown>
                     <button class="btn btn-success" style="float: right;" (click)="validateAndFormatJson()" [disabled]="!editorPanel.code">{{

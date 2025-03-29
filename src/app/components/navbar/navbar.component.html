@@ -11,7 +11,7 @@
             <input type="checkbox" id="theme-toggle" (change)="toggleTheme($event)" clrToggle checked>
             <cds-icon shape="moon" class="moon-icon margin-right"></cds-icon>
             <a class="nav-link nav-text" *ngIf="!currentUser && isWindowWidthGreaterThan992()" routerLink="/login" routerLinkActive="active">Login</a>
-            <clr-dropdown *ngIf="currentUser">
+            <clr-dropdown *ngIf="currentUser && isWindowWidthGreaterThan992()">
                 <button class="nav-text" clrDropdownTrigger aria-label="open user profile">
                     <cds-icon shape="user"></cds-icon>
                     {{ userFirstName }}
@@ -63,10 +63,16 @@
                 <cds-icon clrVerticalNavIcon shape="user"></cds-icon>
                 Login
             </a>
-            <a clrVerticalNavLink *ngIf="currentUser && !isWindowWidthGreaterThan992()" (click)="logout()">
-                <cds-icon clrVerticalNavIcon shape="logout"></cds-icon>
-                Logout
-            </a>
+            <clr-vertical-nav-group routerLinkActive="active" *ngIf="currentUser && !isWindowWidthGreaterThan992()">
+                <cds-icon shape="user" clrVerticalNavIcon></cds-icon>
+                {{ userFirstName }}
+                <clr-vertical-nav-group-children>
+                    <a clrVerticalNavLink *ngIf="currentUser && !isWindowWidthGreaterThan992()" (click)="logout()">
+                        <cds-icon clrVerticalNavIcon shape="logout"></cds-icon>
+                        Logout
+                    </a>
+                </clr-vertical-nav-group-children>
+              </clr-vertical-nav-group>
         </clr-vertical-nav>
         <div class="content-container">
             <div class="content-area">

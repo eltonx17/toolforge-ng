@@ -85,8 +85,8 @@ export class AuthService {
 
   getUserFirstName(): string | null {
     const user = this.getCurrentUser();
-    if (user?.displayName) {
-      return user.displayName.split(' ')[0];
+    if (user?.email) {
+      return user.email.split('@')[0];
     }
     return null;
   }
