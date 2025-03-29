@@ -19,6 +19,7 @@ export class AuthComponent {
   user: any = null;
   email: string = '';
   password: string = '';
+  confirmPassword: string = '';
   rememberMe: boolean = true;
   
   // State properties
@@ -29,6 +30,20 @@ export class AuthComponent {
   error: string | null = null;
 
   constructor(private authService: AuthService, private router: Router) {}
+
+  // Password validation method
+  validatePasswords() {
+    if (!this.confirmPassword) {
+      this.error = null;
+      return;
+    }
+    
+    if (this.password !== this.confirmPassword) {
+      this.error = 'Passwords do not match';
+    } else {
+      this.error = null;
+    }
+  }
 
   // Authentication methods
   login() {
@@ -56,8 +71,13 @@ export class AuthComponent {
   }
 
   signUp() {
-    if (!this.email || !this.password) {
+    if (!this.email || !this.password || !this.confirmPassword) {
       this.error = 'Please enter both email and password';
+      return;
+    }
+
+    if (this.password !== this.confirmPassword) {
+      this.error = 'Passwords do not match';
       return;
     }
 
