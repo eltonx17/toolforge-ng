@@ -12,6 +12,10 @@
   margin-right: 0 !important;
 }
 
+button {
+  touch-action: manipulation;
+}
+
 /* .clr-toggle-wrapper input[type=checkbox]:checked + label::before {
   border-color: rgb(66 129 14) !important;
   background-color: rgb(66 129 14) !important;

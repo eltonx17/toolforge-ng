@@ -67,14 +67,6 @@ export class AuthService {
     );
   }
 
-  googleSignIn(rememberMe: boolean = false): Observable<User> {
-    const provider = new GoogleAuthProvider();
-    return this.setPersistence(rememberMe).pipe(
-      switchMap(() => from(signInWithPopup(this.auth, provider))),
-      map(result => result.user)
-    );
-  }
-
   logout() {
     return from(signOut(this.auth));
   }
@@ -89,6 +81,10 @@ export class AuthService {
       return user.email.split('@')[0];
     }
     return null;
+  }
+
+  getAuth(): Auth {
+    return this.auth;
   }
 
   ngOnDestroy() {

@@ -5,6 +5,7 @@ import { RouterOutlet, Router, RouterModule } from '@angular/router';
 import { ClarityModule } from '@clr/angular';
 import { ClarityIcons } from '@cds/core/icon';
 import { FormsModule } from '@angular/forms';
+import { GoogleAuthProvider, signInWithPopup } from '@firebase/auth';
 
 @Component({
   selector: 'app-auth',
@@ -107,18 +108,18 @@ export class AuthComponent {
   loginWithGoogle() {
     this.showSpinner = true;
     this.error = null;
-    this.authService.googleSignIn(this.rememberMe).subscribe({
-      next: (user) => {
-        this.user = user;
-        console.log('User Logged In:', this.user);
-        this.showSpinner = false;
-        this.router.navigate(['/']);
-      },
-      error: (err) => {
-        console.error('Google Sign In Error:', err);
-        this.error = 'Failed to sign in with Google. Please try again.';
-        this.showSpinner = false;
-      }
+    
+    // Create the Google provider and open the popup
+    const provider = new GoogleAuthProvider();
+    signInWithPopup(this.authService.getAuth(), provider).then((result) => {
+      this.user = result.user;
+      console.log('User Logged In:', this.user);
+      this.showSpinner = false;
+      this.router.navigate(['/']);
+    }).catch((err) => {
+      console.error('Google Sign In Error:', err);
+      this.error = 'Failed to sign in with Google. Please try again.';
+      this.showSpinner = false;
     });
   }
 
