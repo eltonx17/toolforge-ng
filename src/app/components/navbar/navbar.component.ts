@@ -44,10 +44,11 @@ export class NavbarComponent implements OnInit, OnDestroy {
 
   ngOnInit() {
     this.isNavCollapsed = window.innerWidth >= 992;
+    
+    // Sync the checkbox with the current theme
     const themeToggle = document.querySelector('#theme-toggle') as HTMLInputElement;
     if (themeToggle) {
-      themeToggle.checked = true;
-      this.themeService.setTheme('dark');
+      themeToggle.checked = this.themeService.getTheme() === 'dark';
     }
 
     // Wait for initial auth state and then subscribe to changes
