@@ -16,24 +16,11 @@ button {
   touch-action: manipulation;
 }
 
-/* .clr-toggle-wrapper input[type=checkbox]:checked + label::before {
-  border-color: rgb(66 129 14) !important;
-  background-color: rgb(66 129 14) !important;
+.clr-ul,
+.clr-list {
+  list-style: initial !important;
 }
 
-.clr-toggle-wrapper input[type=checkbox]:checked + label::after {
-  border-color: rgb(66 129 14) !important;
-}
-
-.btn.btn-success, .alert-app-level .alert-item .btn-success.btn, .btn-success .btn, .btn-success .alert-app-level .alert-item .btn, .alert-app-level .alert-item .btn-success .btn {
-  border-color: rgb(66 129 14) !important;
-  background-color: rgb(66 129 14) !important;
-}
-
-.btn.btn-info, .alert-app-level .alert-item .btn-info.btn, .btn-info .btn, .btn-info .alert-app-level .alert-item .btn, .alert-app-level .alert-item .btn-info .btn, .btn.btn-primary, .alert-app-level .alert-item .btn-primary.btn, .btn-primary .btn, .btn-primary .alert-app-level .alert-item .btn, .alert-app-level .alert-item .btn-primary .btn {
-  border-color: rgb(14, 148, 206) !important;
-  background-color: rgb(14, 148, 206) !important;
-} */
 
 .clr-form-control {
   width: 100% !important;
@@ -51,25 +38,8 @@ button {
   margin: var(--clr-btn-vertical-margin) var(--clr-btn-horizontal-margin) var(--clr-btn-vertical-margin) 0;
 }
 
-/* @media (max-width: 600px) {
-  .main-container {
-    height: 90vh !important;
-  }
-
-  .height-limit {
-    display: flex;
-    height: 90%;
+@media (max-width: 460px) {
+  .main-container .content-container .content-area {
+    padding: 0rem 0.5rem 0.5rem 0.5rem !important;
   }
 }
-
-@media only screen and (max-device-width: 812px) and (-webkit-min-device-pixel-ratio: 2) and (orientation: portrait) {
-  .height-limit {
-    height: 90vh;
-  }
-}
-
-@media only screen and (max-device-width: 812px) and (-webkit-min-device-pixel-ratio: 2) and (orientation: landscape) {
-  .height-limit {
-    height: 90vh;
-  }
-} */

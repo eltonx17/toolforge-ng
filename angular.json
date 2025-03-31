@@ -35,10 +35,13 @@
               "node_modules/@cds/core/global.min.css",
               "node_modules/@cds/core/styles/theme.dark.min.css",
               "node_modules/@clr/ui/clr-ui.min.css",
+              "node_modules/prismjs/themes/prism-okaidia.css",
+              "node_modules/prismjs/plugins/line-numbers/prism-line-numbers.css",
               "src/styles.css"
             ],
             "scripts": [
-               "node_modules/monaco-editor/min/vs/loader.js"
+               "node_modules/monaco-editor/min/vs/loader.js",
+               "node_modules/prismjs/prism.js"
             ]
           },
           "configurations": {
@@ -103,10 +106,13 @@
               "node_modules/@cds/core/global.min.css",
               "node_modules/@cds/core/styles/theme.dark.min.css",
               "node_modules/@clr/ui/clr-ui.min.css",
+              "node_modules/prismjs/themes/prism-okaidia.css",
+              "node_modules/prismjs/plugins/line-numbers/prism-line-numbers.css",
               "src/styles.css"
             ],
             "scripts": [
-               "node_modules/monaco-editor/min/vs/loader.js"
+               "node_modules/monaco-editor/min/vs/loader.js",
+               "node_modules/prismjs/prism.js"
             ]
           }
         }

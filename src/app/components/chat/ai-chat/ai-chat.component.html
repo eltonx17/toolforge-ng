@@ -1,14 +1,37 @@
 <div class="clr-row center-align">
   <div class="clr-col-lg-9 clr-col-md-8 clr-col-12 center-align">
     <div class="chat-container" [ngClass]="{'has-messages': messages.length > 0, 'no-messages': messages.length === 0}">
-      <div class="messages" style="white-space: pre-wrap;">
-        <p *ngFor="let message of messages" class="message">{{ message }}</p>
+      <!-- Connection Status -->
+      <div class="connection-status" [ngClass]="connectionStatus.toLowerCase()">
+        {{ connectionStatus }}
+      </div>
+
+      <!-- Error Message -->
+      <div class="error-message" *ngIf="errorMessage">
+        {{ errorMessage }}
+      </div>
+
+      <div class="messages">
+        <ng-container *ngFor="let message of messages">
+          <div *ngIf="message.type === 'ai'" class="ai">
+            <div class="message-content">
+              <markdown [data]="message.content" addListClass></markdown>
+            </div>
+          </div>
+          <div *ngIf="message.type === 'user'" class="message user">
+            <div class="message-content">
+              <div class="user-message">{{ message.content }}</div>
+            </div>
+          </div>
+        </ng-container>
       </div>
       <h3 class="input-header" *ngIf="messages.length === 0">What can I do for you?</h3>
       <div class="input-container">
-        <textarea id="chatTextarea" clrTextarea placeholder="Type your message..." [(ngModel)]="newMessage"
-          (keydown)="handleKeydown($event)"></textarea>
-        <button class="btn btn-primary" (click)="sendMessage()">Send</button>
+        <textarea #messageInput id="chatTextarea" clrTextarea placeholder="Type your message..." [(ngModel)]="newMessage"
+          (keydown)="handleKeydown($event)" [disabled]="!isConnected() || isProcessing"></textarea>
+        <button class="btn btn-primary" (click)="sendMessage()" [disabled]="!isConnected() || isProcessing">
+          {{ isProcessing ? 'Processing...' : 'Send' }}
+        </button>
       </div>
     </div>
   </div>

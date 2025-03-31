@@ -13,7 +13,8 @@ const envFile = `export const environment = {
         messagingSenderId: '${process.env.FIREBASE_MESSAGING_SENDER_ID}',
         appId: '${process.env.FIREBASE_APP_ID}',
         measurementId: '${process.env.FIREBASE_MEASUREMENT_ID}'
-    }
+    },
+    webSocketUrl: '${process.env.WEBSOCKET_URL}'
 };
 `;
 const targetPath = path.join(__dirname, './src/environments/environment.ts');

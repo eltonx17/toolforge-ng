@@ -7,6 +7,8 @@ import { provideAnimationsAsync } from '@angular/platform-browser/animations/asy
 import { provideFirebaseApp, initializeApp } from '@angular/fire/app';
 import { provideAuth, getAuth } from '@angular/fire/auth';
 import { environment } from '../environments/environment';
+import { provideMarkdown } from 'ngx-markdown';
+import { HttpClient, provideHttpClient } from '@angular/common/http';
 
 export const appConfig: ApplicationConfig = {
   providers: [
@@ -15,6 +17,8 @@ export const appConfig: ApplicationConfig = {
     provideAnimationsAsync(),
     provideMonacoEditor(),
     provideFirebaseApp(() => initializeApp(environment.firebaseConfig)),
-    provideAuth(() => getAuth())
+    provideAuth(() => getAuth()),
+    provideHttpClient(),
+    provideMarkdown()
   ]
 };

@@ -7,5 +7,6 @@ export const environment = {
         messagingSenderId: '29349949893',
         appId: '1:29349949893:web:8a5de1d52275f3d5059bac',
         measurementId: 'G-8D7DL22PY0'
-    }
+    },
+    webSocketUrl: 'ws://192.168.0.109:8080/gemini-ws'
 };
