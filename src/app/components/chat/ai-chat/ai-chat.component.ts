@@ -117,7 +117,7 @@ export class AiChatComponent implements OnInit, OnDestroy, AfterViewChecked {
         const aiMsg = this.messages.find(m => 'id' in m && m.id === aiMessageId) as AiMessage | undefined;
         if (aiMsg && aiMsg.isStreaming) {
           aiMsg.error = true;
-          aiMsg.content += `\n\n**Error:** ${this.error}`;
+          //aiMsg.content += `\n\n**Error:** ${this.error}`;
           aiMsg.isStreaming = false;
         }
         this.isLoading = false;
