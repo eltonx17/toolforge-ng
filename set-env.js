@@ -14,7 +14,7 @@ const envFile = `export const environment = {
         appId: '${process.env.FIREBASE_APP_ID}',
         measurementId: '${process.env.FIREBASE_MEASUREMENT_ID}'
     },
-    webSocketUrl: '${process.env.WEBSOCKET_URL}'
+    apiBaseUrl: '${process.env.API_BASE_URL}'
 };
 `;
 const targetPath = path.join(__dirname, './src/environments/environment.ts');
