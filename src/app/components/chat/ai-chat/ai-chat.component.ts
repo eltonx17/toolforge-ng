@@ -1,21 +1,25 @@
-import { Component, OnInit, OnDestroy, ChangeDetectorRef, ViewChild, ElementRef, SecurityContext } from '@angular/core';
+import { Component, OnInit, OnDestroy, ViewChild, ElementRef, SecurityContext, ChangeDetectorRef, AfterViewChecked } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { ClarityModule } from '@clr/angular';
 import { FormsModule } from '@angular/forms';
-import { ClrTextareaModule } from '@clr/angular';
 import { RouterModule } from '@angular/router';
-import { HttpClientModule } from '@angular/common/http';
 import { MarkdownComponent, SECURITY_CONTEXT } from 'ngx-markdown';
-import { ListClassDirective } from '../../../directives/list-class.directive';
-import { environment } from '../../../../environments/environment';
+import { ListClassDirective } from '../../../directives/list-class.directive'; 
+import { ChatStreamService } from '../../../services/chat-stream.service';
+import { Subscription } from 'rxjs';
+
 interface UserMessage {
   content: string;
   type: 'user';
+  isStreaming?: boolean; 
+  error?: boolean;
 }
 
 interface AiMessage {
   content: string;
   type: 'ai';
+  isStreaming?: boolean; 
+  error?: boolean;    
 }
 
 type Message = UserMessage | AiMessage;
@@ -26,187 +30,146 @@ type Message = UserMessage | AiMessage;
   imports: [
     RouterModule,
     ClarityModule,
-    ClrTextareaModule,
     FormsModule,
     CommonModule,
-    HttpClientModule,
     MarkdownComponent,
     ListClassDirective
   ],
   providers: [
-    { provide: SECURITY_CONTEXT, useValue: SecurityContext.HTML }
+    { provide: SECURITY_CONTEXT, useValue: SecurityContext.HTML },
   ],
   templateUrl: './ai-chat.component.html',
   styleUrls: ['./ai-chat.component.css']
 })
-export class AiChatComponent implements OnInit, OnDestroy {
-  // --- Configuration ---
-  private readonly webSocketUrl = environment.webSocketUrl;
+export class AiChatComponent implements OnInit, OnDestroy, AfterViewChecked {
 
-  // --- State ---
-  private socket: WebSocket | null = null;
-  public connectionStatus: 'Connecting' | 'Connected' | 'Disconnected' | 'Error' = 'Disconnected';
   public messages: Message[] = [];
   public newMessage: string = '';
-  public errorMessage: string | null = null;
-  public isProcessing: boolean = false;
-  private currentAiResponse: string = '';
+  isLoading: boolean = false;
+  error: string | null = null;
 
+  @ViewChild('messageContainer') private messageContainer!: ElementRef;
   @ViewChild('messageInput') messageInput!: ElementRef<HTMLTextAreaElement>;
 
-  constructor(private cdr: ChangeDetectorRef) {}
+  private streamingSubscription: Subscription | null = null;
+  private needsScroll: boolean = false;
+
+  constructor(
+    private chatStreamService: ChatStreamService,
+    private cdRef: ChangeDetectorRef
+  ) { }
 
   ngOnInit(): void {
-    this.connectWebSocket();
   }
 
   ngOnDestroy(): void {
-    this.disconnectWebSocket();
+    this.unsubscribe();
   }
 
-  // --- WebSocket Connection Handling ---
-  connectWebSocket(): void {
-    if (this.socket && this.socket.readyState === WebSocket.OPEN) {
-      console.log('WebSocket already connected.');
-      return;
-    }
-
-    this.connectionStatus = 'Connecting';
-    this.errorMessage = null;
-    console.log(`Attempting to connect to ${this.webSocketUrl}`);
-
-    this.socket = new WebSocket(this.webSocketUrl);
-
-    this.socket.onopen = (event) => {
-      console.log('WebSocket connection opened:', event);
-      this.connectionStatus = 'Connected';
-      this.errorMessage = null;
-      this.isProcessing = false;
-      this.cdr.detectChanges();
-    };
-
-    this.socket.onmessage = (event) => {
-      console.log('Message from server:', event.data);
-      this.handleIncomingMessage(event.data);
-      this.cdr.detectChanges();
-    };
-
-    this.socket.onerror = (event) => {
-      console.error('WebSocket error:', event);
-      this.connectionStatus = 'Error';
-      this.errorMessage = 'WebSocket error occurred. Check console for details.';
-      this.isProcessing = false;
-      this.cdr.detectChanges();
-    };
-
-    this.socket.onclose = (event) => {
-      console.log('WebSocket connection closed:', event.code, event.reason);
-      if (this.connectionStatus !== 'Error') {
-        this.connectionStatus = 'Disconnected';
-      }
-      this.socket = null;
-      this.isProcessing = false;
-
-      if (!event.wasClean) {
-        this.errorMessage = `Connection lost (Code: ${event.code}). Attempting to reconnect...`;
-        console.log('Attempting to reconnect in 5 seconds...');
-        setTimeout(() => this.connectWebSocket(), 5000);
-      } else {
-        this.errorMessage = `Connection closed (Code: ${event.code})`;
-      }
-      this.cdr.detectChanges();
-    };
-  }
-
-  disconnectWebSocket(): void {
-    if (this.socket) {
-      console.log('Closing WebSocket connection.');
-      this.socket.close(1000, "Client disconnected");
-      this.socket = null;
-      this.connectionStatus = 'Disconnected';
-      this.isProcessing = false;
+  ngAfterViewChecked(): void {
+    if (this.needsScroll) {
+      this.scrollToBottom();
+      this.needsScroll = false; 
     }
   }
 
-  // --- Message Handling ---
-  handleIncomingMessage(rawData: string): void {
-    try {
-      const message = JSON.parse(rawData);
-      if (!message || !message.type || message.payload === undefined) {
-        console.warn('Received malformed message:', rawData);
-        this.errorMessage = `Received malformed message: ${rawData}`;
-        return;
-      }
-
-      switch (message.type) {
-        case 'token':
-          this.currentAiResponse += message.payload;
-          // Update the last AI message with new content
-          const lastMessage = this.messages[0];
-          if (lastMessage && lastMessage.type === 'ai') {
-            lastMessage.content = this.currentAiResponse;
-          }
-          this.errorMessage = null;
-          break;
-        case 'status':
-          console.log('Status update:', message.payload);
-          break;
-        case 'end':
-          console.log('Stream finished:', message.payload);
-          this.currentAiResponse = '';
-          this.isProcessing = false;
-          break;
-        case 'error':
-          console.error('Received error from server:', message.payload);
-          this.errorMessage = `Server Error: ${message.payload}`;
-          this.messages.unshift({ type: 'ai', content: `[ERROR: ${message.payload}]` });
-          this.isProcessing = false;
-          break;
-        default:
-          console.warn('Received unknown message type:', message.type);
-          this.messages.unshift({ type: 'ai', content: `[UNKNOWN TYPE: ${message.type} | PAYLOAD: ${message.payload}]` });
-      }
-    } catch (e) {
-      console.error('Failed to parse incoming message:', rawData, e);
-      this.errorMessage = `Failed to parse message: ${rawData}`;
-    }
-  }
-
-  sendMessage() {
-    if (!this.newMessage.trim()) {
-      return;
-    }
-
-    if (!this.socket || this.socket.readyState !== WebSocket.OPEN) {
-      this.errorMessage = 'WebSocket is not connected. Please wait or try reconnecting.';
-      console.error('Attempted to send message while WebSocket is not open.');
-      return;
-    }
-
-    const message = JSON.stringify({ prompt: this.newMessage });
-    console.log('Sending message:', message);
-    this.socket.send(message);
-
-    // Add user message to chat
-    this.messages.unshift({ type: 'user', content: this.newMessage });
-    // Add empty AI message that will be updated with tokens
-    this.messages.unshift({ type: 'ai', content: '' });
-    this.currentAiResponse = '';
-
-    this.errorMessage = null;
-    this.isProcessing = true;
-    this.newMessage = '';
-  }
-
-  handleKeydown(event: KeyboardEvent) {
+  handleKeydown(event: KeyboardEvent): void {
     if (event.key === 'Enter' && !event.shiftKey) {
       event.preventDefault();
       this.sendMessage();
     }
   }
 
-  // Helper function for template binding
-  isConnected(): boolean {
-    return this.connectionStatus === 'Connected';
+  sendMessage(): void {
+    const userMessageContent = this.newMessage;
+    if (!userMessageContent || this.isLoading) {
+      return;
+    }
+  
+    // 1. Add user message at the top
+    this.messages.unshift({ content: userMessageContent, type: 'user' });
+    const prompt = userMessageContent; // Store prompt before clearing
+    this.newMessage = ''; // Clear input field
+  
+    // 2. Prepare for AI response
+    this.isLoading = true;
+    this.error = null;
+    this.unsubscribe(); // Ensure any previous stream is stopped
+  
+    // 3. Add an AI placeholder at the top and track its ID
+    const aiMessageId = Date.now().toString(); // Unique identifier
+    const aiMessage: AiMessage & { id: string } = { content: '', type: 'ai', isStreaming: true, id: aiMessageId };
+    this.messages.unshift(aiMessage);
+  
+    // 4. Call the streaming service
+    this.streamingSubscription = this.chatStreamService.streamChat(prompt).subscribe({
+      next: (chunk) => {
+        // Find the AI message by its unique ID
+        const aiMsg = this.messages.find(m => 'id' in m && m.id === aiMessageId) as AiMessage | undefined;
+        if (aiMsg && aiMsg.isStreaming) {
+          aiMsg.content += chunk;
+        }
+      },
+      error: (err) => {
+        console.error('Stream failed:', err);
+        this.error = 'Failed to get response. Please try again.';
+  
+        const aiMsg = this.messages.find(m => 'id' in m && m.id === aiMessageId) as AiMessage | undefined;
+        if (aiMsg && aiMsg.isStreaming) {
+          aiMsg.error = true;
+          aiMsg.content += `\n\n**Error:** ${this.error}`;
+          aiMsg.isStreaming = false;
+        }
+        this.isLoading = false;
+      },
+      complete: () => {
+        console.log('Stream completed.');
+        const aiMsg = this.messages.find(m => 'id' in m && m.id === aiMessageId) as AiMessage | undefined;
+        if (aiMsg && aiMsg.isStreaming) {
+          aiMsg.isStreaming = false;
+        }
+        this.isLoading = false;
+      },
+    });
   }
+
+  private addMessage(content: string, type: 'user' | 'ai', isStreaming: boolean = false): void {
+    if (type === 'user') {
+       this.messages.unshift({ content, type });
+    } else {
+       this.messages.unshift({ content, type, isStreaming, error: false });
+    }
+     this.needsScroll = true;
+  }
+
+  private unsubscribe(): void {
+    if (this.streamingSubscription) {
+      this.streamingSubscription.unsubscribe();
+      this.streamingSubscription = null;
+      console.log('Unsubscribed from stream.');
+       // Find potentially unfinished streaming message and mark it as not streaming
+       const streamingMsg = this.messages.find(m => m.type === 'ai' && m.isStreaming);
+       if (streamingMsg) {
+         streamingMsg.isStreaming = false;
+       }
+    }
+  }
+
+  stopStreaming(): void {
+    this.unsubscribe(); // This now handles marking the last message correctly
+    this.isLoading = false;
+    console.log('Streaming stopped by user.');
+  }
+
+  // --- Scrolling Logic ---
+  private scrollToBottom(): void {
+    try {
+      if (this.messageContainer && this.messageContainer.nativeElement) {
+        this.messageContainer.nativeElement.scrollTop = this.messageContainer.nativeElement.scrollHeight;
+      }
+    } catch (err) {
+      console.error('Could not scroll to bottom:', err);
+    }
+  }
+
 }
