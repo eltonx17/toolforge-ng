@@ -36,7 +36,7 @@ type Message = UserMessage | AiMessage;
     ListClassDirective
   ],
   providers: [
-    { provide: SECURITY_CONTEXT, useValue: SecurityContext.HTML },
+    { provide: SECURITY_CONTEXT, useValue: SecurityContext.HTML }
   ],
   templateUrl: './ai-chat.component.html',
   styleUrls: ['./ai-chat.component.css']
