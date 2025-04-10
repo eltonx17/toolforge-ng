@@ -43,3 +43,32 @@ button {
     padding: 0rem 0.5rem 0.5rem 0.5rem !important;
   }
 }
+
+.markdown-clipboard-button {
+  background-color: rgba(255, 255, 255, 0.07);
+  border: none;
+  border-radius: 4px;
+  color: #ffffff;
+  cursor: pointer;
+  font-size: 11px;
+  padding: 4px 0;
+  width: 50px;
+  transition: all 250ms ease-out;
+}
+
+.markdown-clipboard-button:hover {
+  background-color: rgba(255, 255, 255, 0.14);
+}
+
+.markdown-clipboard-button:active {
+  transform: scale(0.95);
+}
+
+.markdown-clipboard-button.copied {
+  background-color: rgba(0, 255, 0, 0.1);
+  color: #00ff00;
+}
+
+.main-container:not([class*=open-overflow-menu]):not([class*=open-hamburger-menu]) .clr-vertical-nav.is-collapsed {
+  max-width: none;
+}
