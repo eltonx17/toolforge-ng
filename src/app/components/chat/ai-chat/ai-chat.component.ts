@@ -10,7 +10,7 @@ import { Subscription } from 'rxjs';
 
 interface UserMessage {
   content: string;
-  type: 'user';
+  type: string;
   previousReplyContext?: string;
   isStreaming?: boolean; 
   error?: boolean;
@@ -18,7 +18,7 @@ interface UserMessage {
 
 interface AiMessage {
   content: string;
-  type: 'ai';
+  type: string;
   previousReplyContext?: string;
   isStreaming?: boolean; 
   error?: boolean;    
@@ -106,19 +106,26 @@ export class AiChatComponent implements OnInit, OnDestroy, AfterViewChecked {
     this.messages.unshift(aiMessage);
 
     // 4. Prepare the context to send to the streaming service
-    let contextMessages = [...this.messages];
+    
+    const historyMessages = this.messages; // e.g., array [0] to [5]
+    const currentUserPrompt = prompt; // e.g., 'is it good?'
+    const numberOfPairsToKeep = 10; // Or however many you want, e.g., Infinity for all
+
+    const contextMessages = this.generateLlmContext(
+      historyMessages,
+      currentUserPrompt
+    );
+
+    //let contextMessages = [...this.messages];
     let tokenCount = this.calculateTokenCount(contextMessages.map(msg => msg.content));
- 
-    // Keep a little bit of the last AI message in context
-    const lastAiMessage = this.messages[2];
-    contextMessages = lastAiMessage ? [{ previousReplyContext: lastAiMessage.content , content: "User has a new question: " + prompt, type: 'ai' }] : [{ content: prompt, type: 'ai' }];
 
     // If token count exceeds 1 million, shrink the context
     while (tokenCount > 1000000) {
       contextMessages.pop(); // Remove the oldest message
       tokenCount = this.calculateTokenCount(contextMessages.map(msg => msg.content));
     }
-
+    
+    console.log(contextMessages);
     // Convert contextMessages to a string
     const contextString = JSON.stringify(contextMessages);
   
@@ -154,7 +161,6 @@ export class AiChatComponent implements OnInit, OnDestroy, AfterViewChecked {
   }
 
   private calculateTokenCount(contents: string[]): number {
-    // Calculate the approximate token count of all message contents
     return contents.reduce((count, content) => count + content.length, 0);
   }
 
@@ -172,12 +178,11 @@ export class AiChatComponent implements OnInit, OnDestroy, AfterViewChecked {
   }
 
   stopStreaming(): void {
-    this.unsubscribe(); // This now handles marking the last message correctly
+    this.unsubscribe();
     this.isLoading = false;
     console.log('Streaming stopped by user.');
   }
 
-  // --- Scrolling Logic ---
   private scrollToBottom(): void {
     try {
       if (this.messageContainer && this.messageContainer.nativeElement) {
@@ -186,6 +191,38 @@ export class AiChatComponent implements OnInit, OnDestroy, AfterViewChecked {
     } catch (err) {
       console.error('Could not scroll to bottom:', err);
     }
+  }
+
+  generateLlmContext(messages: Message[], prompt: string, maxContextPairs = Infinity) {
+    let systemContextPairs = [];
+  
+    for (let i = 1; i < messages.length - 1; i++) {
+      const currentMsg = messages[i];
+      const nextMsg = messages[i + 1];
+  
+      if (currentMsg.type === 'ai' && nextMsg.type === 'user') {
+        systemContextPairs.unshift({
+          previousReplyContext: currentMsg.content,
+          content: nextMsg.content,
+          type: 'system',
+        });
+      }
+    }
+  
+    let finalSystemPairs = systemContextPairs;
+    if (maxContextPairs > 0 && maxContextPairs !== Infinity) {
+      finalSystemPairs = systemContextPairs.slice(-maxContextPairs);
+    }
+  
+    const finalMessages = [...finalSystemPairs];
+  
+    finalMessages.push({
+      content: prompt,
+      type: 'user',
+      previousReplyContext: ''
+    });
+  
+    return finalMessages;
   }
 
 }
