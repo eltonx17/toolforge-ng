@@ -11,6 +11,7 @@ import { Subscription } from 'rxjs';
 interface UserMessage {
   content: string;
   type: 'user';
+  previousReplyContext?: string;
   isStreaming?: boolean; 
   error?: boolean;
 }
@@ -18,6 +19,7 @@ interface UserMessage {
 interface AiMessage {
   content: string;
   type: 'ai';
+  previousReplyContext?: string;
   isStreaming?: boolean; 
   error?: boolean;    
 }
@@ -81,8 +83,6 @@ export class AiChatComponent implements OnInit, OnDestroy, AfterViewChecked {
   }
 
   sendMessage(): void {
-    // Check if the new message is related to the previous context
-    const isRelated = this.isRelatedToPreviousContext(this.newMessage);
 
     const userMessageContent = this.newMessage;
     if (!userMessageContent || this.isLoading) {
@@ -108,14 +108,10 @@ export class AiChatComponent implements OnInit, OnDestroy, AfterViewChecked {
     // 4. Prepare the context to send to the streaming service
     let contextMessages = [...this.messages];
     let tokenCount = this.calculateTokenCount(contextMessages.map(msg => msg.content));
-
-    // Check if the new message is related to the previous context
-    if (!isRelated) {
-      // Keep a little bit of the last AI message in context
-      const lastAiMessage = this.messages[2];
-      contextMessages = lastAiMessage ? [{ content: lastAiMessage.content +" \n\n"+ prompt , type: 'ai' }] : [{ content: prompt, type: 'ai' }];
-
-    }
+ 
+    // Keep a little bit of the last AI message in context
+    const lastAiMessage = this.messages[2];
+    contextMessages = lastAiMessage ? [{ previousReplyContext: lastAiMessage.content , content: "User has a new question: " + prompt, type: 'ai' }] : [{ content: prompt, type: 'ai' }];
 
     // If token count exceeds 1 million, shrink the context
     while (tokenCount > 1000000) {
@@ -190,30 +186,6 @@ export class AiChatComponent implements OnInit, OnDestroy, AfterViewChecked {
     } catch (err) {
       console.error('Could not scroll to bottom:', err);
     }
-  }
-
-  private isRelatedToPreviousContext(newMessage: string): boolean {
-    const threshold = 0.3; // Define a similarity threshold (0 to 1)
-
-    // Compare the new message with only the last message in the context
-    const lastMessage = this.messages[0]; // Get the most recent message
-    if (lastMessage) {
-      const similarity = this.calculateSimilarity(newMessage, lastMessage.content);
-      return similarity >= threshold;
-    }
-
-    return true; 
-  }
-
-  private calculateSimilarity(text1: string, text2: string): number {
-    // A simple similarity calculation based on common word count
-    const words1 = new Set(text1.toLowerCase().split(/\s+/));
-    const words2 = new Set(text2.toLowerCase().split(/\s+/));
-
-    const commonWords = Array.from(words1).filter(word => words2.has(word));
-    const totalWords = new Set([...words1, [...words2]]).size;
-
-    return commonWords.length / totalWords;
   }
 
 }
