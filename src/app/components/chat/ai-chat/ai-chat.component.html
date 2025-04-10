@@ -19,8 +19,8 @@
       <div class="input-container">
         <textarea #messageInput id="chatTextarea" clrTextarea placeholder="Type your message..." [(ngModel)]="newMessage"
           (keydown)="handleKeydown($event)" [disabled]=" isLoading"></textarea>
-        <button class="btn btn-primary" (click)="sendMessage()" [disabled]="isLoading">
-          {{ isLoading ? 'Processing...' : 'Send' }}
+        <button class="btn btn-primary" (click)="isLoading ? stopStreaming() : sendMessage()" [disabled]="false">
+          {{ isLoading ? 'Abort' : 'Send' }}
         </button>
       </div>
     </div>
