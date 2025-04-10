@@ -81,6 +81,9 @@ export class AiChatComponent implements OnInit, OnDestroy, AfterViewChecked {
   }
 
   sendMessage(): void {
+    // Check if the new message is related to the previous context
+    const isRelated = this.isRelatedToPreviousContext(this.newMessage);
+
     const userMessageContent = this.newMessage;
     if (!userMessageContent || this.isLoading) {
       return;
@@ -90,6 +93,7 @@ export class AiChatComponent implements OnInit, OnDestroy, AfterViewChecked {
     this.messages.unshift({ content: userMessageContent, type: 'user' });
     const prompt = userMessageContent; // Store prompt before clearing
     this.newMessage = ''; // Clear input field
+    
   
     // 2. Prepare for AI response
     this.isLoading = true;
@@ -100,9 +104,30 @@ export class AiChatComponent implements OnInit, OnDestroy, AfterViewChecked {
     const aiMessageId = Date.now().toString(); // Unique identifier
     const aiMessage: AiMessage & { id: string } = { content: '', type: 'ai', isStreaming: true, id: aiMessageId };
     this.messages.unshift(aiMessage);
+
+    // 4. Prepare the context to send to the streaming service
+    let contextMessages = [...this.messages];
+    let tokenCount = this.calculateTokenCount(contextMessages.map(msg => msg.content));
+
+    // Check if the new message is related to the previous context
+    if (!isRelated) {
+      // Keep a little bit of the last AI message in context
+      const lastAiMessage = this.messages[2];
+      contextMessages = lastAiMessage ? [{ content: lastAiMessage.content +" \n\n"+ prompt , type: 'ai' }] : [{ content: prompt, type: 'ai' }];
+
+    }
+
+    // If token count exceeds 1 million, shrink the context
+    while (tokenCount > 1000000) {
+      contextMessages.pop(); // Remove the oldest message
+      tokenCount = this.calculateTokenCount(contextMessages.map(msg => msg.content));
+    }
+
+    // Convert contextMessages to a string
+    const contextString = JSON.stringify(contextMessages);
   
-    // 4. Call the streaming service
-    this.streamingSubscription = this.chatStreamService.streamChat(prompt).subscribe({
+    // 5. Call the streaming service
+    this.streamingSubscription = this.chatStreamService.streamChat(contextString).subscribe({
       next: (chunk) => {
         // Find the AI message by its unique ID
         const aiMsg = this.messages.find(m => 'id' in m && m.id === aiMessageId) as AiMessage | undefined;
@@ -117,7 +142,6 @@ export class AiChatComponent implements OnInit, OnDestroy, AfterViewChecked {
         const aiMsg = this.messages.find(m => 'id' in m && m.id === aiMessageId) as AiMessage | undefined;
         if (aiMsg && aiMsg.isStreaming) {
           aiMsg.error = true;
-          //aiMsg.content += `\n\n**Error:** ${this.error}`;
           aiMsg.isStreaming = false;
         }
         this.isLoading = false;
@@ -133,13 +157,9 @@ export class AiChatComponent implements OnInit, OnDestroy, AfterViewChecked {
     });
   }
 
-  private addMessage(content: string, type: 'user' | 'ai', isStreaming: boolean = false): void {
-    if (type === 'user') {
-       this.messages.unshift({ content, type });
-    } else {
-       this.messages.unshift({ content, type, isStreaming, error: false });
-    }
-     this.needsScroll = true;
+  private calculateTokenCount(contents: string[]): number {
+    // Calculate the approximate token count of all message contents
+    return contents.reduce((count, content) => count + content.length, 0);
   }
 
   private unsubscribe(): void {
@@ -170,6 +190,30 @@ export class AiChatComponent implements OnInit, OnDestroy, AfterViewChecked {
     } catch (err) {
       console.error('Could not scroll to bottom:', err);
     }
+  }
+
+  private isRelatedToPreviousContext(newMessage: string): boolean {
+    const threshold = 0.3; // Define a similarity threshold (0 to 1)
+
+    // Compare the new message with only the last message in the context
+    const lastMessage = this.messages[0]; // Get the most recent message
+    if (lastMessage) {
+      const similarity = this.calculateSimilarity(newMessage, lastMessage.content);
+      return similarity >= threshold;
+    }
+
+    return true; 
+  }
+
+  private calculateSimilarity(text1: string, text2: string): number {
+    // A simple similarity calculation based on common word count
+    const words1 = new Set(text1.toLowerCase().split(/\s+/));
+    const words2 = new Set(text2.toLowerCase().split(/\s+/));
+
+    const commonWords = Array.from(words1).filter(word => words2.has(word));
+    const totalWords = new Set([...words1, [...words2]]).size;
+
+    return commonWords.length / totalWords;
   }
 
 }

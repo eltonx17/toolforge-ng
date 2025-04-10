@@ -1,6 +1,22 @@
 /* You can add global styles to this file, and also import other style files */
 * {
   box-sizing: border-box;
+  scrollbar-color: #8888889c transparent;
+  scrollbar-width: thin;
+  -ms-overflow-style: none;
+}
+
+::-webkit-scrollbar {
+  width: 8px;
+}
+
+::-webkit-scrollbar-track {
+  background: transparent;
+}
+
+::-webkit-scrollbar-thumb {
+  background: #888;
+  border-radius: 4px;
 }
 
 .main-container {
@@ -20,7 +36,6 @@ button {
 .clr-list {
   list-style: initial !important;
 }
-
 
 .clr-form-control {
   width: 100% !important;
