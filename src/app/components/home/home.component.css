@@ -8,8 +8,25 @@
 
 .card {
   transition: box-shadow 0.10s ease-in-out;
+  position: relative;
 }
 .card:hover {
   box-shadow: 0 2px 6px rgba(122, 118, 118, 0.449);
   cursor: pointer;
+}
+
+.coming-soon-fade {
+  animation: comingSoonFade 2s linear infinite alternate;
+}
+
+@keyframes comingSoonFade {
+  0% { opacity: 1; }
+  100% { opacity: 0; }
+}
+
+.coming-soon-right {
+  position: absolute;
+  right: 18px;
+  top: 18px;
+  z-index: 2;
 }
