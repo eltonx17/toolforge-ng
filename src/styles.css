@@ -133,5 +133,6 @@ header.header-7, .header.header-7 {
 }
 
 .clr-modal-host .modal, .clr-modal-host .modal-backdrop {
-    position: absolute;
+    position: fixed;
+    z-index: 2;
 }
