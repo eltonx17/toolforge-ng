@@ -1,5 +1,5 @@
-<div class="clr-row center-align" [class.blurred-background]="showAuthModal">
-  <div class="clr-col-lg-9 clr-col-md-8 clr-col-12 center-align">
+<div class="clr-row center-align" [class.blurred-background]="showAuthModal" clrModalHost>
+  <div id="chat-window-panel" class="clr-col-lg-9 clr-col-md-8 clr-col-12 center-align zindex">
     <div class="chat-container" [ngClass]="{'has-messages': messages.length > 0, 'no-messages': messages.length === 0}">
       <div class="messages">
         <ng-container *ngFor="let message of messages">
@@ -17,18 +17,54 @@
       </div>
       <h3 class="input-header" *ngIf="messages.length === 0">What can I do for you?</h3>
       <div class="input-container">
-        <textarea #messageInput id="chatTextarea" clrTextarea placeholder="Type your message..." [(ngModel)]="newMessage"
-          (keydown)="handleKeydown($event)" [disabled]="isLoading || !isAuthenticated"></textarea>
-        <button class="btn btn-primary" (click)="isLoading ? stopStreaming() : sendMessage()" [disabled]="!isAuthenticated">
+        <textarea #messageInput id="chatTextarea" clrTextarea placeholder="Type your message..."
+          [(ngModel)]="newMessage" (keydown)="handleKeydown($event)"
+          [disabled]="isLoading || !isAuthenticated"></textarea>
+        <button class="btn btn-primary" (click)="isLoading ? stopStreaming() : sendMessage()"
+          [disabled]="!isAuthenticated">
           {{ isLoading ? 'Abort' : 'Send' }}
         </button>
       </div>
     </div>
   </div>
 </div>
-  <clr-modal id="login-modal" [(clrModalOpen)]="showAuthModal" [clrModalClosable]="true" [clrModalSize]="'md'" (clrModalOpenChange)="onAuthModalClose()">
-    <h3 class="modal-title">Sign in to use Converser AI</h3>
-    <div class="modal-body">
-      <app-auth></app-auth>
-    </div>
-  </clr-modal>
+<clr-modal id="login-modal" [(clrModalOpen)]="showAuthModal" [clrModalClosable]="true" [clrModalSize]="'md'"
+  (clrModalOpenChange)="onAuthModalClose()">
+  <h3 class="modal-title">Sign in to use Converser AI</h3>
+  <div class="modal-body">
+    <app-auth></app-auth>
+  </div>
+</clr-modal>
+
+<div class="history-btn-wrapper">
+  <button class="btn btn-primary" (click)="opened = true"><cds-icon shape="history"></cds-icon></button>
+</div>
+
+<clr-side-panel id="chat-history-panel" #sidePanel [(clrSidePanelOpen)]="opened" clrSidePanelSize="md"
+  [clrSidePanelBackdrop]="false">
+  <div class="side-panel-title">
+    Chat History
+  </div>
+  <div class="side-panel-body">
+    <clr-tabs>
+      <clr-tab>
+        <button clrTabLink>Chat</button>
+        <clr-tab-content *clrIfActive>
+          <p cds-text="body" cds-layout="m-t:md">
+            Test
+          </p>
+        </clr-tab-content>
+      </clr-tab>
+      <clr-tab>
+        <button clrTabLink>Notion</button>
+        <clr-tab-content *clrIfActive>
+          <p cds-text="body" cds-layout="m-t:md">Notion</p>
+        </clr-tab-content>
+      </clr-tab>
+    </clr-tabs>
+  </div>
+
+  <div class="side-panel-footer">
+    <button type="button" class="btn btn-primary" (click)="opened = false">Close</button>
+  </div>
+</clr-side-panel>

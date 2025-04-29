@@ -359,3 +359,10 @@ button:hover {
   transition: filter 0.3s;
 }
 
+.history-btn-wrapper {
+  position: absolute;
+  top: 75px;
+  right: 23px;
+  z-index: 10;
+}
+

@@ -114,3 +114,24 @@ button {
 #login-modal .modal-body-wrapper {
     max-height: 75vh;
 }
+
+#chat-history-panel .modal-backdrop {
+    background-color: transparent !important;
+    z-index: 0 !important;
+}
+
+#chat-window-panel {
+  z-index: 1;
+}
+
+.main-container .content-container .content-area {
+    padding: 0rem 1.2rem 0.2rem;
+}
+
+header.header-7, .header.header-7 {
+    z-index: 2;
+}
+
+.clr-modal-host .modal, .clr-modal-host .modal-backdrop {
+    position: absolute;
+}

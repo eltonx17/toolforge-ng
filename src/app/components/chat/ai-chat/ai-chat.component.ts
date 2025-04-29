@@ -9,6 +9,7 @@ import { ChatStreamService } from '../../../services/chat-stream.service';
 import { AuthService } from '../../../services/auth.service';
 import { AuthComponent } from '../../auth/auth.component';
 import { Subscription } from 'rxjs';
+import { ClarityIcons, arrowIcon, pinIcon, unpinIcon, historyIcon } from '@cds/core/icon';
 
 interface UserMessage {
   content: string;
@@ -27,6 +28,7 @@ interface AiMessage {
 }
 
 type Message = UserMessage | AiMessage;
+ClarityIcons.addIcons(arrowIcon, pinIcon, unpinIcon, historyIcon);
 
 @Component({
   selector: 'app-ai-chat',
@@ -54,6 +56,7 @@ export class AiChatComponent implements OnInit, OnDestroy, AfterViewChecked {
   error: string | null = null;
   isAuthenticated = false;
   showAuthModal = false;
+  opened = false;
 
   @ViewChild('messageContainer') private messageContainer!: ElementRef;
   @ViewChild('messageInput') messageInput!: ElementRef<HTMLTextAreaElement>;
