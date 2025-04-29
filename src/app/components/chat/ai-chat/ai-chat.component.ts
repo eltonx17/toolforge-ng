@@ -69,11 +69,13 @@ export class AiChatComponent implements OnInit, OnDestroy, AfterViewChecked {
   ) { }
 
   ngOnInit(): void {
-    this.authSubscription = this.authService.currentUser$.subscribe(user => {
-      this.isAuthenticated = !!user;
-      this.showAuthModal = !user;
-      this.cdRef.detectChanges();
-    });
+    setTimeout(() => {
+      this.authSubscription = this.authService.currentUser$.subscribe(user => {
+        this.isAuthenticated = !!user;
+        this.showAuthModal = !user;
+        this.cdRef.detectChanges();
+      });
+    }, 100); // 1 second delay
   }
 
   ngOnDestroy(): void {

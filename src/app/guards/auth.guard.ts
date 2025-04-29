@@ -5,22 +5,14 @@ import { Observable } from 'rxjs';
 import { map } from 'rxjs/operators';
 
 @Injectable({
-  providedIn: 'root'
+    providedIn: 'root'
 })
 export class AuthGuard implements CanActivate {
-  constructor(private authService: AuthService, private router: Router) {}
+    constructor(private authService: AuthService, private router: Router) { }
 
-  canActivate(route: ActivatedRouteSnapshot, state: RouterStateSnapshot): Observable<boolean> {
-    return this.authService.waitForInitialAuth().pipe(
-      map(user => {
-        if (user) {
-          return true;
-        } else {
-          // Instead of redirect, we will handle modal in the component
-          // Allow activation, but component will check auth
-          return true; 
-        }
-      })
-    );
-  }
+    canActivate(route: ActivatedRouteSnapshot, state: RouterStateSnapshot): Observable<boolean> {
+        return this.authService.waitForInitialAuth().pipe(
+            map(() => true)
+        );
+    }
 }

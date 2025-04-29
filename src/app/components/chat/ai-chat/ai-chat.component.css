@@ -356,6 +356,6 @@ button:hover {
   filter: blur(4px);
   pointer-events: none;
   user-select: none;
-  transition: filter 0.2s;
+  transition: filter 0.3s;
 }
 
