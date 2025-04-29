@@ -87,3 +87,24 @@ button {
 .main-container:not([class*=open-overflow-menu]):not([class*=open-hamburger-menu]) .clr-vertical-nav.is-collapsed {
   max-width: none;
 }
+
+/* Override only for login modal */
+#login-modal .modal-dialog {
+  background-color: var(--cds-alias-object-app-background) !important;
+}
+
+#login-modal .login-wrapper .login .login-body {
+    justify-content: normal !important;
+}
+
+#login-modal .login-wrapper .login {
+    min-height: 73.5vh;
+}
+
+#login-modal .login-wrapper .login .title {
+    font-size: 29px;
+}
+
+#login-modal .modal-body-wrapper {
+    max-height: 75vh;
+}

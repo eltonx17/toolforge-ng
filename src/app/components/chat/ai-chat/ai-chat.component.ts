@@ -6,6 +6,8 @@ import { RouterModule } from '@angular/router';
 import { MarkdownComponent, SECURITY_CONTEXT } from 'ngx-markdown';
 import { ListClassDirective } from '../../../directives/list-class.directive'; 
 import { ChatStreamService } from '../../../services/chat-stream.service';
+import { AuthService } from '../../../services/auth.service';
+import { AuthComponent } from '../../auth/auth.component';
 import { Subscription } from 'rxjs';
 
 interface UserMessage {
@@ -35,7 +37,8 @@ type Message = UserMessage | AiMessage;
     FormsModule,
     CommonModule,
     MarkdownComponent,
-    ListClassDirective
+    ListClassDirective,
+    AuthComponent
   ],
   providers: [
     { provide: SECURITY_CONTEXT, useValue: SecurityContext.HTML },
@@ -49,23 +52,35 @@ export class AiChatComponent implements OnInit, OnDestroy, AfterViewChecked {
   public newMessage: string = '';
   isLoading: boolean = false;
   error: string | null = null;
+  isAuthenticated = false;
+  showAuthModal = false;
 
   @ViewChild('messageContainer') private messageContainer!: ElementRef;
   @ViewChild('messageInput') messageInput!: ElementRef<HTMLTextAreaElement>;
 
   private streamingSubscription: Subscription | null = null;
   private needsScroll: boolean = false;
+  private authSubscription: Subscription | null = null;
 
   constructor(
     private chatStreamService: ChatStreamService,
-    private cdRef: ChangeDetectorRef
+    private cdRef: ChangeDetectorRef,
+    private authService: AuthService
   ) { }
 
   ngOnInit(): void {
+    this.authSubscription = this.authService.currentUser$.subscribe(user => {
+      this.isAuthenticated = !!user;
+      this.showAuthModal = !user;
+      this.cdRef.detectChanges();
+    });
   }
 
   ngOnDestroy(): void {
     this.unsubscribe();
+    if (this.authSubscription) {
+      this.authSubscription.unsubscribe();
+    }
   }
 
   ngAfterViewChecked(): void {
@@ -83,6 +98,10 @@ export class AiChatComponent implements OnInit, OnDestroy, AfterViewChecked {
   }
 
   sendMessage(): void {
+    if (!this.isAuthenticated) {
+      this.showAuthModal = true;
+      return;
+    }
 
     const userMessageContent = this.newMessage;
     if (!userMessageContent || this.isLoading) {
@@ -223,6 +242,12 @@ export class AiChatComponent implements OnInit, OnDestroy, AfterViewChecked {
     });
   
     return finalMessages;
+  }
+
+  onAuthModalClose() {
+    if (!this.isAuthenticated) {
+      window.location.href = '/';
+    }
   }
 
 }

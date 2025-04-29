@@ -46,6 +46,15 @@ export class AuthComponent {
     }
   }
 
+  // Helper method to handle successful authentication
+  private handleAuthSuccess(user: any) {
+    this.user = user;
+    this.showSpinner = false;
+    if (this.router.url == '/login') {
+      this.router.navigate(['/']);
+    }
+  }
+
   // Authentication methods
   login() {
     if (!this.email || !this.password) {
@@ -58,10 +67,7 @@ export class AuthComponent {
     
     this.authService.signIn(this.email, this.password, this.rememberMe).subscribe({
       next: (user) => {
-        this.user = user;
-        console.log('User Logged In:', this.user);
-        this.showSpinner = false;
-        this.router.navigate(['/']);
+        this.handleAuthSuccess(user);
       },
       error: (err) => {
         console.error('Login Error:', err);
@@ -92,10 +98,7 @@ export class AuthComponent {
 
     this.authService.signUp(this.email, this.password, this.rememberMe).subscribe({
       next: (user) => {
-        this.user = user;
-        console.log('User Signed Up:', this.user);
-        this.showSpinner = false;
-        this.router.navigate(['/']);
+        this.handleAuthSuccess(user);
       },
       error: (err) => {
         console.error('Sign Up Error:', err);
@@ -112,10 +115,7 @@ export class AuthComponent {
     // Create the Google provider and open the popup
     const provider = new GoogleAuthProvider();
     signInWithPopup(this.authService.getAuth(), provider).then((result) => {
-      this.user = result.user;
-      console.log('User Logged In:', this.user);
-      this.showSpinner = false;
-      this.router.navigate(['/']);
+      this.handleAuthSuccess(result.user);
     }).catch((err) => {
       console.error('Google Sign In Error:', err);
       this.error = 'Failed to sign in with Google. Please try again.';

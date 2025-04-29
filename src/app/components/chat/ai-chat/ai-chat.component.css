@@ -351,3 +351,11 @@ button:hover {
   margin: 0.25em 0;
   padding: 0;
 }
+
+.blurred-background {
+  filter: blur(4px);
+  pointer-events: none;
+  user-select: none;
+  transition: filter 0.2s;
+}
+
