@@ -1,4 +1,4 @@
-<div class="clr-row center-align" [class.blurred-background]="showAuthModal" clrModalHost>
+<div class="clr-row center-align" [class.blurred-background]="showAuthModal">
   <div id="chat-window-panel" class="clr-col-lg-9 clr-col-md-8 clr-col-12 center-align zindex">
     <div class="chat-container" [ngClass]="{'has-messages': messages.length > 0, 'no-messages': messages.length === 0}">
       <div class="messages">
@@ -40,8 +40,9 @@
   <button class="btn btn-primary" (click)="opened = true"><cds-icon shape="history"></cds-icon></button>
 </div>
 
+<div id="chat-history-panel">
 <clr-side-panel id="chat-history-panel" #sidePanel [(clrSidePanelOpen)]="opened" clrSidePanelSize="md"
-  [clrSidePanelBackdrop]="false">
+  [clrSidePanelBackdrop]="true">
   <div class="side-panel-title">
     Chat History
   </div>
@@ -97,3 +98,4 @@
     <button type="button" class="btn btn-primary" (click)="opened = false">Close</button>
   </div>
 </clr-side-panel>
+</div>

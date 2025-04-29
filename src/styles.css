@@ -115,24 +115,24 @@ button {
     max-height: 75vh;
 }
 
-#chat-history-panel .modal-backdrop {
-    background-color: transparent !important;
-    z-index: 0 !important;
-}
-
-#chat-window-panel {
-  z-index: 1;
-}
-
 .main-container .content-container .content-area {
     padding: 0rem 1.2rem 0.2rem;
 }
 
-header.header-7, .header.header-7 {
-    z-index: 2;
+#login-modal .modal {
+  animation: slideDownT 0.4s ease-in-out forwards;
 }
 
-.clr-modal-host .modal, .clr-modal-host .modal-backdrop {
-    position: fixed;
-    z-index: 2;
+@keyframes slideDownT {
+  from {
+    transform: translate(0vw, -40vh);
+  }
+
+  to {
+    transform: translateY(0);
+  }
+}
+
+#chat-history-panel .modal-backdrop {
+    background-color: transparent !important;
 }

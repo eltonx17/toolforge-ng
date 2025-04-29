@@ -202,59 +202,6 @@ button:hover {
   margin-right: 5vw;
 }
 
-.connection-status {
-  position: absolute;
-  top: 10px;
-  left: 10px;
-  padding: 5px 10px;
-  border-radius: 15px;
-  font-size: 0.8em;
-  font-weight: 500;
-  z-index: 1000;
-}
-
-.connection-status.connected {
-  background-color: #28a745;
-  color: white;
-}
-
-.connection-status.connecting {
-  background-color: #ffc107;
-  color: black;
-}
-
-.connection-status.disconnected {
-  background-color: #6c757d;
-  color: white;
-}
-
-.connection-status.error {
-  background-color: #dc3545;
-  color: white;
-}
-
-.error-message {
-  background-color: #dc3545;
-  color: white;
-  padding: 10px;
-  margin: 10px;
-  border-radius: 4px;
-  text-align: center;
-  animation: fadeIn 0.3s ease-in-out;
-}
-
-@keyframes fadeIn {
-  from {
-    opacity: 0;
-    transform: translateY(-10px);
-  }
-
-  to {
-    opacity: 1;
-    transform: translateY(0);
-  }
-}
-
 .ai-response-container {
   width: 100%;
   padding: 20px;
