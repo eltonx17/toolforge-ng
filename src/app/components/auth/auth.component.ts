@@ -1,5 +1,6 @@
 import { Component } from '@angular/core';
 import { AuthService } from '../../services/auth.service';
+import { UserApiService } from '../../services/user-api.service';
 import { CommonModule } from '@angular/common';
 import { RouterOutlet, Router, RouterModule } from '@angular/router';
 import { ClarityModule } from '@clr/angular';
@@ -30,7 +31,11 @@ export class AuthComponent {
   // Error property
   error: string | null = null;
 
-  constructor(private authService: AuthService, private router: Router) {}
+  constructor(
+    private authService: AuthService,
+    private router: Router,
+    private userApiService: UserApiService
+  ) {}
 
   // Password validation method
   validatePasswords() {
@@ -77,7 +82,7 @@ export class AuthComponent {
     });
   }
 
-  signUp() {
+  async signUp() {
     if (!this.email || !this.password || !this.confirmPassword) {
       this.error = 'Please enter both email and password';
       return;
@@ -97,7 +102,12 @@ export class AuthComponent {
     this.error = null;
 
     this.authService.signUp(this.email, this.password, this.rememberMe).subscribe({
-      next: (user) => {
+      next: async (user) => {
+        try {
+          await this.userApiService.sendSignupProfile(user);
+        } catch (apiErr) {
+          console.error('Failed to send user profile to backend:', apiErr);
+        }
         this.handleAuthSuccess(user);
       },
       error: (err) => {
