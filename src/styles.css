@@ -89,6 +89,10 @@ button {
 }
 
 /* Override only for login modal */
+#login-modal .login-wrapper .login .login-group {
+    padding-top: 45px !important;
+}
+
 #login-modal .modal-dialog {
   background-color: var(--cds-alias-object-app-background) !important;
 }
