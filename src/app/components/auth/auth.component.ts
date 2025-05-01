@@ -118,19 +118,25 @@ export class AuthComponent {
     });
   }
 
-  loginWithGoogle() {
+  async loginWithGoogle() {
     this.showSpinner = true;
     this.error = null;
     
     // Create the Google provider and open the popup
     const provider = new GoogleAuthProvider();
-    signInWithPopup(this.authService.getAuth(), provider).then((result) => {
+    try {
+      const result = await signInWithPopup(this.authService.getAuth(), provider);
+      try {
+        await this.userApiService.sendSignupProfile(result.user);
+      } catch (apiErr) {
+        console.error('Failed to send user profile to backend:', apiErr);
+      }
       this.handleAuthSuccess(result.user);
-    }).catch((err) => {
+    } catch (err) {
       console.error('Google Sign In Error:', err);
       this.error = 'Failed to sign in with Google. Please try again.';
       this.showSpinner = false;
-    });
+    }
   }
 
   logout() {

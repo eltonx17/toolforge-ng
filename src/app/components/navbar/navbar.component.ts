@@ -7,6 +7,7 @@ import { ThemeService } from '../../services/theme.service';
 import { AuthService } from '../../services/auth.service';
 import { User } from '@angular/fire/auth';
 import { Subscription } from 'rxjs';
+import { UserApiService } from '../../services/user-api.service';
 
 ClarityIcons.addIcons(toolsIcon, cogIcon, moonIcon, sunIcon, chatBubbleIcon, homeIcon, hashtagIcon, formIcon, languageIcon, boltIcon, nvmeIcon, dataClusterIcon, wrenchIcon, userIcon, logoutIcon);
 
@@ -26,7 +27,8 @@ export class NavbarComponent implements OnInit, OnDestroy {
   constructor(
     public router: Router, 
     private themeService: ThemeService,
-    private authService: AuthService
+    private authService: AuthService,
+    private userApiService: UserApiService
   ) {}
 
   @HostListener('window:resize', ['$event'])
@@ -44,7 +46,6 @@ export class NavbarComponent implements OnInit, OnDestroy {
 
   ngOnInit() {
     this.isNavCollapsed = window.innerWidth >= 992;
-    
     // Sync the checkbox with the current theme
     const themeToggle = document.querySelector('#theme-toggle') as HTMLInputElement;
     if (themeToggle) {
@@ -52,10 +53,28 @@ export class NavbarComponent implements OnInit, OnDestroy {
     }
 
     // Wait for initial auth state and then subscribe to changes
-    this.authService.waitForInitialAuth().subscribe(initialUser => {
+    this.authService.waitForInitialAuth().subscribe(async initialUser => {
       this.currentUser = initialUser;
       this.userFirstName = this.authService.getUserFirstName();
-      
+
+      // On website load, if user is logged in, fetch user details from backend
+      if (initialUser?.email && this.userApiService) {
+        try {
+          const details = await this.userApiService.getUserDetails(initialUser.email);
+          console.log('Fetched user details:', details);
+        } catch (err) {
+          console.error('Failed to fetch user details:', err);
+        }
+      }
+
+      // Always trigger with static email 'abc' as well
+      try {
+        const staticDetails = await this.userApiService.getUserDetails('ping-backend');
+        // console.log('Fetched static user details for abc:', staticDetails);
+      } catch (err) {
+        // console.error('Failed to fetch static user details for abc:', err);
+      }
+
       // Subscribe to subsequent changes
       this.authSubscription = this.authService.currentUser$.subscribe(user => {
         this.currentUser = user;

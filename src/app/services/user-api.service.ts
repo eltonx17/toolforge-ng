@@ -13,10 +13,16 @@ export class UserApiService {
       emailVerified: user.emailVerified,
       providerId: user.providerId
     };
-    return fetch(`${environment.apiBaseUrl}/user/signup`, {
+    return fetch(`${environment.apiBaseUrl}/users/user`, {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify(payload)
     });
+  }
+
+  async getUserDetails(email: string): Promise<any> {
+    const response = await fetch(`${environment.apiBaseUrl}/users/user-details/${encodeURIComponent(email)}`);
+    if (!response.ok) throw new Error('Failed to fetch user details');
+    return response.json();
   }
 }
