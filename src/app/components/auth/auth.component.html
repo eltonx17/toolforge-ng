@@ -1,7 +1,7 @@
 <div class="clr-row center-align">
     <div class="clr-col-12 center-align">
         <div class="login-wrapper">
-            <form class="login" (ngSubmit)="signupMode ? signUp() : login()">
+            <form class="login" *ngIf="!forgotPasswordMode" (ngSubmit)="signupMode ? signUp() : login()">
                 <div class="login-header">
                 </div>
                 <div class="login-body">
@@ -33,6 +33,9 @@
                         <button type="submit" class="btn btn-primary" [disabled]="showSpinner">
                             {{signupMode ? 'Sign Up' : 'Log in'}}
                         </button>
+                        <a href="javascript://" class="signup" (click)="toggleForgotPasswordMode()">
+                            Forgot password?
+                        </a>
                         <div class="divider">
                             <span>or</span>
                         </div>
@@ -47,6 +50,29 @@
                 </div>
                 <div class="login-footer">
                 </div>
+            </form>
+            <!-- Forgot Password Form -->
+            <form class="login" *ngIf="forgotPasswordMode" (ngSubmit)="sendPasswordReset()">
+                <div class="login-header"></div>
+                <div class="login-body">
+                    <section class="title">
+                        <div class="welcome">Reset Password</div>
+                        <div class="hint">Enter your email to receive a password reset link.</div>
+                    </section>
+                    <div class="login-group">
+                        <clr-input-container>
+                            <label class="clr-sr-only">E-mail</label>
+                            <input type="email" autocomplete="username" name="resetEmail" clrInput [(ngModel)]="resetEmail" placeholder="Enter e-mail" required />
+                        </clr-input-container>
+                        <div class="error" [class.active]="error">{{error}}</div>
+                        <div class="success" *ngIf="resetMessage">{{resetMessage}}</div>
+                        <button type="submit" class="btn btn-primary" [disabled]="showSpinner">Send Reset Email</button>
+                        <a href="javascript://" class="signup" (click)="toggleForgotPasswordMode()" style="display:block;margin-top:10px;">
+                            Back to login
+                        </a>
+                    </div>
+                </div>
+                <div class="login-footer"></div>
             </form>
         </div>
     </div>

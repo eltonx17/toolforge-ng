@@ -23,19 +23,55 @@ export class AuthComponent {
   password: string = '';
   confirmPassword: string = '';
   rememberMe: boolean = true;
-  
+
   // State properties
   signupMode: boolean = false;
   showSpinner: boolean = false;
-  
+
+
   // Error property
   error: string | null = null;
+
+  // Forgot password state
+  forgotPasswordMode: boolean = false;
+  resetEmail: string = '';
+  resetMessage: string | null = null;
+
+  // Toggle forgot password mode
+  toggleForgotPasswordMode() {
+    this.forgotPasswordMode = !this.forgotPasswordMode;
+    this.resetMessage = null;
+    this.error = null;
+    this.resetEmail = '';
+  }
+
+  // Send password reset email
+  sendPasswordReset() {
+    if (!this.resetEmail) {
+      this.resetMessage = null;
+      this.error = 'Please enter your email address.';
+      return;
+    }
+    this.showSpinner = true;
+    this.error = null;
+    this.resetMessage = null;
+    this.authService.sendPasswordReset(this.resetEmail).subscribe({
+      next: () => {
+        this.resetMessage = 'Password reset email sent. Please check your inbox.';
+        this.showSpinner = false;
+      },
+      error: (err) => {
+        this.error = err?.message || 'Failed to send password reset email.';
+        this.showSpinner = false;
+      }
+    });
+  }
 
   constructor(
     private authService: AuthService,
     private router: Router,
     private userApiService: UserApiService
-  ) {}
+  ) { }
 
   // Password validation method
   validatePasswords() {
@@ -43,7 +79,7 @@ export class AuthComponent {
       this.error = null;
       return;
     }
-    
+
     if (this.password !== this.confirmPassword) {
       this.error = 'Passwords do not match';
     } else {
@@ -69,7 +105,7 @@ export class AuthComponent {
 
     this.showSpinner = true;
     this.error = null;
-    
+
     this.authService.signIn(this.email, this.password, this.rememberMe).subscribe({
       next: (user) => {
         this.handleAuthSuccess(user);
@@ -112,7 +148,19 @@ export class AuthComponent {
       },
       error: (err) => {
         console.error('Sign Up Error:', err);
-        this.error = err.message;
+        if (err.code === 'auth/email-already-in-use') {
+          this.error = 'Email already in use. Please try another one.';
+        } else if (err.code === 'auth/invalid-email') {
+          this.error = 'Invalid email address. Please check and try again.';
+        }
+        else if (err.code === 'auth/weak-password') {
+          this.error = 'Password is too weak. Please choose a stronger password.';
+        }
+        else if (err.code === 'auth/operation-not-allowed') {
+          this.error = 'Operation not allowed. Please contact support.';
+        } else {
+          this.error = err.message;
+        }
         this.showSpinner = false;
       }
     });
@@ -121,7 +169,7 @@ export class AuthComponent {
   async loginWithGoogle() {
     this.showSpinner = true;
     this.error = null;
-    
+
     // Create the Google provider and open the popup
     const provider = new GoogleAuthProvider();
     try {

@@ -1,5 +1,5 @@
 import { Injectable } from '@angular/core';
-import { Auth, signInWithPopup, GoogleAuthProvider, signOut, setPersistence, browserLocalPersistence, browserSessionPersistence, User, createUserWithEmailAndPassword, signInWithEmailAndPassword, indexedDBLocalPersistence } from '@angular/fire/auth';
+import { Auth, signOut, setPersistence, User, createUserWithEmailAndPassword, signInWithEmailAndPassword, indexedDBLocalPersistence, sendPasswordResetEmail } from '@angular/fire/auth';
 import { from, Observable, ReplaySubject, BehaviorSubject, of } from 'rxjs';
 import { map, switchMap, take, filter, tap } from 'rxjs/operators';
 
@@ -10,6 +10,11 @@ export class AuthService {
   // Use ReplaySubject(1) to store the last known user state
   private currentUserSource = new ReplaySubject<User | null>(1);
   currentUser$ = this.currentUserSource.asObservable();
+
+  // Sends a password reset email via Firebase
+  sendPasswordReset(email: string): Observable<void> {
+    return from(sendPasswordResetEmail(this.auth, email)).pipe(map(() => void 0));
+  }
 
   // Add a flag to signal when the initial check is done
   private authStatusChecked = new BehaviorSubject<boolean>(false);
