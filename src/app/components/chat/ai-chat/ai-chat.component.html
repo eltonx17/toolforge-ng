@@ -1,5 +1,5 @@
 <div class="clr-row center-align">
-  <div id="chat-window-panel" class="clr-col-lg-9 clr-col-md-8 clr-col-12 center-align zindex">
+  <div id="chat-window-panel" class="clr-col-lg-9 clr-col-md-12 clr-col-12 center-align zindex">
     <div class="chat-container" [ngClass]="{'has-messages': messages.length > 0, 'no-messages': messages.length === 0}">
       <div class="messages">
         <ng-container *ngFor="let message of messages">
@@ -15,12 +15,12 @@
           </div>
         </ng-container>
       </div>
-      <h3 class="input-header" *ngIf="messages.length === 0">What can I do for you?</h3>
+      <h3 class="input-header" *ngIf="messages.length === 0">What can I help with?</h3>
       <div class="input-container">
         <textarea #messageInput id="chatTextarea" clrTextarea placeholder="Type your message..."
           [(ngModel)]="newMessage" (keydown)="handleKeydown($event)"
           [disabled]="isLoading || !isAuthenticated"></textarea>
-        <button class="btn btn-primary" (click)="isLoading ? stopStreaming() : sendMessage()"
+        <button #sendBtn class="btn btn-primary send-btn" (click)="isLoading ? stopStreaming() : sendMessage()"
           [disabled]="!isAuthenticated">
           {{ isLoading ? 'Abort' : 'Send' }}
         </button>
