@@ -3,7 +3,7 @@
 .message {
   align-self: flex-end;
   background-color: #48595f;
-  border-radius: 50px;
+  border-radius: 40px;
   margin: 5px;
   padding: 10px;
   max-width: 60%;
@@ -123,7 +123,6 @@ textarea {
 button {
   padding: 10px 20px;
   margin-left: 10px;
-  border: none;
   background-color: #007bff;
   color: white;
   border-radius: 4px;
@@ -327,8 +326,12 @@ button:hover {
 .history-btn-wrapper {
   position: absolute;
   top: 75px;
-  right: 23px;
+  right: 14px;
   z-index: 1;
+}
+
+.history-btn {
+  border-radius: 100px;
 }
 
 .clr-textarea {
@@ -338,4 +341,15 @@ button:hover {
 
 textarea {
   padding-top:27px;
+  padding-right: 85px;
+  padding-left: 25px;
+}
+
+textarea {
+  overflow: auto;          /* Enables scrolling */
+  scrollbar-width: none;   /* For Firefox */
+}
+
+textarea::-webkit-scrollbar {
+  display: none;           /* For Chrome, Safari, Edge */
 }
