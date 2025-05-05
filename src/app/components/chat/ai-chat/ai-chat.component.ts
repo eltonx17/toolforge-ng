@@ -141,17 +141,27 @@ export class AiChatComponent implements OnInit, OnDestroy, AfterViewChecked {
     );
 
     //let contextMessages = [...this.messages];
-    let tokenCount = this.calculateTokenCount(contextMessages.map(msg => msg.content));
+    let tokenCount = this.calculateTokenCount(
+      contextMessages.map(msg => (msg.user !== undefined ? msg.user : (msg.assistant !== undefined ? msg.assistant : '')))
+    );
 
     // If token count exceeds 1 million, shrink the context
     while (tokenCount > 1000000) {
       contextMessages.pop(); // Remove the oldest message
-      tokenCount = this.calculateTokenCount(contextMessages.map(msg => msg.content));
+      tokenCount = this.calculateTokenCount(
+        contextMessages.map(msg => (msg.user !== undefined ? msg.user : (msg.assistant !== undefined ? msg.assistant : '')))
+      );
     }
     
     console.log(contextMessages);
-    // Convert contextMessages to a string
-    const contextString = JSON.stringify(contextMessages);
+    // Convert contextMessages to a plain text string in the required format
+    const contextString = contextMessages
+      .map(msg => {
+        if (msg.user !== undefined) return `user: "${msg.user}"`;
+        if (msg.assistant !== undefined) return `assistant: "${msg.assistant}"`;
+        return '';
+      })
+      .join('\n');
   
     // 5. Call the streaming service
     this.streamingSubscription = this.chatStreamService.streamChat(contextString).subscribe({
@@ -217,36 +227,39 @@ export class AiChatComponent implements OnInit, OnDestroy, AfterViewChecked {
     }
   }
 
-  generateLlmContext(messages: Message[], prompt: string, maxContextPairs = Infinity) {
-    let systemContextPairs = [];
-  
-    for (let i = 1; i < messages.length - 1; i++) {
-      const currentMsg = messages[i];
-      const nextMsg = messages[i + 1];
-  
-      if (currentMsg.type === 'ai' && nextMsg.type === 'user') {
-        systemContextPairs.unshift({
-          previousReplyContext: currentMsg.content,
-          content: nextMsg.content,
-          type: 'system',
-        });
+generateLlmContext(messages: Message[], prompt: string, maxContextPairs = Infinity) {
+    // Collect user/assistant pairs in order, latest last
+    const context: { user: string; assistant: string }[] = [];
+    let lastUser = null;
+    for (let i = messages.length - 1; i >= 0; i--) {
+      const msg = messages[i];
+      if (msg.type === 'user') {
+        lastUser = msg.content;
+      } else if (msg.type === 'ai' && lastUser !== null) {
+        context.unshift({ user: lastUser, assistant: msg.content });
+        lastUser = null;
       }
     }
-  
-    let finalSystemPairs = systemContextPairs;
-    if (maxContextPairs > 0 && maxContextPairs !== Infinity) {
-      finalSystemPairs = systemContextPairs.slice(-maxContextPairs);
+    // If there is a user message without an AI reply (e.g., the latest prompt), add it with empty assistant
+    if (lastUser !== null) {
+      context.push({ user: lastUser, assistant: '' });
     }
-  
-    const finalMessages = [...finalSystemPairs];
-  
-    finalMessages.push({
-      content: prompt,
-      type: 'user',
-      previousReplyContext: ''
-    });
-  
-    return finalMessages;
+    // Always add the current prompt as the latest user message
+    if (prompt && (context.length === 0 || context[context.length - 1].user !== prompt)) {
+      context.push({ user: prompt, assistant: '' });
+    }
+    // Limit to maxContextPairs if needed
+    let finalContext = context;
+    if (maxContextPairs > 0 && maxContextPairs !== Infinity) {
+      finalContext = context.slice(-maxContextPairs);
+    }
+    // Flatten to the requested format: user: "..." assistant: "..." ...
+    const result: any[] = [];
+    for (const pair of finalContext) {
+      result.push({ user: pair.user });
+      result.push({ assistant: pair.assistant });
+    }
+    return result;
   }
 
   onAuthModalClose() {

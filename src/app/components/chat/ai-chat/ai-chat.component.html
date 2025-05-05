@@ -5,7 +5,7 @@
         <ng-container *ngFor="let message of messages">
           <div *ngIf="message.type === 'ai'" class="ai">
             <div class="message-content">
-              <markdown [data]="message.content" addListClass lineNumbers [start]="1" clipboard></markdown>
+              <markdown [data]="message.content" addListClass lineNumbers [start]="1" clipboard [disableSanitizer]="true"></markdown>
             </div>
           </div>
           <div *ngIf="message.type === 'user'" class="message user">

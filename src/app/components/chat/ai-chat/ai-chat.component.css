@@ -14,7 +14,7 @@
 .message.user {
   background-color: #48595f;
   margin-left: auto;
-  margin-top: 5px;
+  margin-top: 25px;
 }
 
 .message.ai {
@@ -160,6 +160,9 @@ button:hover {
   .chat-container.no-messages .input-container {
     width: 100%;
     max-width: 70vw !important;
+  }
+  .input-container {
+    width: 70vw !important;
   }
 } 
 
