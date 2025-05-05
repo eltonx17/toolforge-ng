@@ -10,6 +10,7 @@ import { AuthService } from '../../../services/auth.service';
 import { AuthComponent } from '../../auth/auth.component';
 import { Subscription } from 'rxjs';
 import { ClarityIcons, arrowIcon, pinIcon, unpinIcon, historyIcon } from '@cds/core/icon';
+import { environment } from '../../../../environments/environment';
 
 interface UserMessage {
   content: string;
@@ -72,6 +73,10 @@ export class AiChatComponent implements OnInit, OnDestroy, AfterViewChecked {
   ) { }
 
   ngOnInit(): void {
+    // Clear session cookie on load
+    document.cookie = 'Session-Id=; Path=/; Expires=Thu, 01 Jan 1970 00:00:01 GMT;';
+    // On component load, make a call to backend to get fresh Session-Id
+    this.getSessionIdOnLoad();
     setTimeout(() => {
       this.authSubscription = this.authService.currentUser$.subscribe(user => {
         this.isAuthenticated = !!user;
@@ -79,6 +84,23 @@ export class AiChatComponent implements OnInit, OnDestroy, AfterViewChecked {
         this.cdRef.detectChanges();
       });
     }, 100); // 1 second delay
+  }
+
+  /**
+   * Make a backend call to get Session-Id and store in cookie if not present
+   */
+  private getSessionIdOnLoad(): void {
+    if (!document.cookie.split('; ').find(row => row.startsWith('Session-Id='))) {
+      fetch(`${environment.apiBaseUrl}/stream/session`, { method: 'GET' })
+        .then(res => res.text())
+        .then(sessionId => {
+          console.log('Session-Id from response:', sessionId);
+          if (sessionId) {
+            document.cookie = `Session-Id=${sessionId}; path=/`;
+          }
+        })
+        .catch(() => {/* ignore errors, not critical for UI */ });
+    }
   }
 
   ngOnDestroy(): void {
@@ -113,57 +135,19 @@ export class AiChatComponent implements OnInit, OnDestroy, AfterViewChecked {
       return;
     }
 
-    // 1. Add user message at the top
     this.messages.unshift({ content: userMessageContent, type: 'user' });
     const prompt = userMessageContent; // Store prompt before clearing
     this.newMessage = ''; // Clear input field
 
-    // 2. Prepare for AI response
     this.isLoading = true;
     this.error = null;
     this.unsubscribe(); // Ensure any previous stream is stopped
 
-    // 3. Add an AI placeholder at the top and track its ID
     const aiMessageId = Date.now().toString(); // Unique identifier
     const aiMessage: AiMessage & { id: string } = { content: '', type: 'ai', isStreaming: true, id: aiMessageId };
     this.messages.unshift(aiMessage);
 
-    // 4. Prepare the context to send to the streaming service
-    // Exclude the AI placeholder (isStreaming: true, content: '') from context
-    const historyMessages = this.messages.filter(m => !(m.type === 'ai' && (m as any).isStreaming && m.content === ''));
-    const currentUserPrompt = prompt; // e.g., 'is it good?'
-    const numberOfPairsToKeep = 10; // Or however many you want, e.g., Infinity for all
-
-    const contextMessages = this.generateLlmContext(
-      historyMessages,
-      currentUserPrompt
-    );
-
-    //let contextMessages = [...this.messages];
-    let tokenCount = this.calculateTokenCount(
-      contextMessages.map(msg => (msg.user !== undefined ? msg.user : (msg.assistant !== undefined ? msg.assistant : '')))
-    );
-
-    // If token count exceeds 1 million, shrink the context
-    while (tokenCount > 1000000) {
-      contextMessages.pop(); // Remove the oldest message
-      tokenCount = this.calculateTokenCount(
-        contextMessages.map(msg => (msg.user !== undefined ? msg.user : (msg.assistant !== undefined ? msg.assistant : '')))
-      );
-    }
-
-    console.log(contextMessages);
-    // Convert contextMessages to a plain text string in the required format
-    const contextString = contextMessages
-      .map(msg => {
-        if (msg.user !== undefined) return `user: ${msg.user}`;
-        if (msg.assistant !== undefined) return `assistant: ${msg.assistant}`;
-        return '';
-      })
-      .join('\n');
-
-    // 5. Call the streaming service
-    this.streamingSubscription = this.chatStreamService.streamChat(contextString).subscribe({
+    this.streamingSubscription = this.chatStreamService.streamChat(prompt).subscribe({
       next: (chunk) => {
         // Find the AI message by its unique ID
         const aiMsg = this.messages.find(m => 'id' in m && m.id === aiMessageId) as AiMessage | undefined;
@@ -224,43 +208,6 @@ export class AiChatComponent implements OnInit, OnDestroy, AfterViewChecked {
     } catch (err) {
       console.error('Could not scroll to bottom:', err);
     }
-  }
-
-  generateLlmContext(messages: Message[], prompt: string, maxContextPairs = Infinity) {
-    // Robustly pair user/assistant, skipping duplicates and always alternating
-    const context: { user: string; assistant: string }[] = [];
-    let lastUser: string | null = null;
-    for (let i = 0; i < messages.length; i++) {
-      const msg = messages[i];
-      if (msg.type === 'user') {
-        // If there's an unpaired user, push it with empty assistant
-        if (lastUser !== null) {
-          context.push({ user: lastUser, assistant: '' });
-        }
-        lastUser = msg.content;
-      } else if (msg.type === 'ai' && lastUser !== null) {
-        context.push({ user: lastUser, assistant: msg.content });
-        lastUser = null;
-      }
-    }
-    // If there's a user left without an assistant, pair with empty string
-    if (lastUser !== null) {
-      context.push({ user: lastUser, assistant: '' });
-    }
-    // Limit to maxContextPairs if needed
-    let finalContext = context;
-    if (maxContextPairs > 0 && maxContextPairs !== Infinity) {
-      finalContext = context.slice(-maxContextPairs);
-    }
-    // Reverse the context list so the latest is last
-    finalContext = finalContext.reverse();
-    // Flatten to the requested format: user: "..." assistant: "..." ...
-    const result: any[] = [];
-    for (const pair of finalContext) {
-      result.push({ user: pair.user });
-      result.push({ assistant: pair.assistant });
-    }
-    return result;
   }
 
   onAuthModalClose() {

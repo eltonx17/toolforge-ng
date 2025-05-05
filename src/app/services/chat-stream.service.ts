@@ -81,14 +81,37 @@ export class ChatStreamService {
         });
       };
 
+      // Helper to get Session-Id from cookie
+      function getSessionIdFromCookie(): string | null {
+        const match = document.cookie.match(/(?:^|; )Session-Id=([^;]*)/);
+        return match ? decodeURIComponent(match[1]) : null;
+      }
+
+      // Prepare headers
+      const headers: Record<string, string> = {
+        'Content-Type': 'text/plain',
+        'Accept': 'text/event-stream',
+      };
+      const sessionId = getSessionIdFromCookie();
+      if (sessionId) {
+        headers['Session-Id'] = sessionId;
+      }
+
       // Main Fetch Execution
       fetch(url, {
         method: 'POST',
-        headers: { 'Content-Type': 'text/plain', 'Accept': 'text/event-stream' },
+        headers,
         body: prompt,
         signal: signal, // Link fetch to the AbortController
       })
       .then(response => {
+        const sessionId = response.headers.get('Session-Id');
+        console.log('Session-Id from response:', sessionId);
+        console.log('Session-Id from response:', response.headers);
+        if (sessionId && !document.cookie.split('; ').find(row => row.startsWith('Session-Id='))) {
+          document.cookie = `Session-Id=${sessionId}; path=/`;
+        }
+
         if (!response.ok) {
           return response.text().then(errorText => {
             throw new Error(`HTTP error! status: ${response.status}, message: ${errorText}`);
