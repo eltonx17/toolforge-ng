@@ -4,7 +4,7 @@ import { ClarityModule } from '@clr/angular';
 import { FormsModule } from '@angular/forms';
 import { RouterModule } from '@angular/router';
 import { MarkdownComponent, SECURITY_CONTEXT } from 'ngx-markdown';
-import { ListClassDirective } from '../../../directives/list-class.directive'; 
+import { ListClassDirective } from '../../../directives/list-class.directive';
 import { ChatStreamService } from '../../../services/chat-stream.service';
 import { AuthService } from '../../../services/auth.service';
 import { AuthComponent } from '../../auth/auth.component';
@@ -15,7 +15,7 @@ interface UserMessage {
   content: string;
   type: string;
   previousReplyContext?: string;
-  isStreaming?: boolean; 
+  isStreaming?: boolean;
   error?: boolean;
 }
 
@@ -23,8 +23,8 @@ interface AiMessage {
   content: string;
   type: string;
   previousReplyContext?: string;
-  isStreaming?: boolean; 
-  error?: boolean;    
+  isStreaming?: boolean;
+  error?: boolean;
 }
 
 type Message = UserMessage | AiMessage;
@@ -91,7 +91,7 @@ export class AiChatComponent implements OnInit, OnDestroy, AfterViewChecked {
   ngAfterViewChecked(): void {
     if (this.needsScroll) {
       this.scrollToBottom();
-      this.needsScroll = false; 
+      this.needsScroll = false;
     }
   }
 
@@ -112,26 +112,25 @@ export class AiChatComponent implements OnInit, OnDestroy, AfterViewChecked {
     if (!userMessageContent || this.isLoading) {
       return;
     }
-  
+
     // 1. Add user message at the top
     this.messages.unshift({ content: userMessageContent, type: 'user' });
     const prompt = userMessageContent; // Store prompt before clearing
     this.newMessage = ''; // Clear input field
-    
-  
+
     // 2. Prepare for AI response
     this.isLoading = true;
     this.error = null;
     this.unsubscribe(); // Ensure any previous stream is stopped
-  
+
     // 3. Add an AI placeholder at the top and track its ID
     const aiMessageId = Date.now().toString(); // Unique identifier
     const aiMessage: AiMessage & { id: string } = { content: '', type: 'ai', isStreaming: true, id: aiMessageId };
     this.messages.unshift(aiMessage);
 
     // 4. Prepare the context to send to the streaming service
-    
-    const historyMessages = this.messages; // e.g., array [0] to [5]
+    // Exclude the AI placeholder (isStreaming: true, content: '') from context
+    const historyMessages = this.messages.filter(m => !(m.type === 'ai' && (m as any).isStreaming && m.content === ''));
     const currentUserPrompt = prompt; // e.g., 'is it good?'
     const numberOfPairsToKeep = 10; // Or however many you want, e.g., Infinity for all
 
@@ -152,17 +151,17 @@ export class AiChatComponent implements OnInit, OnDestroy, AfterViewChecked {
         contextMessages.map(msg => (msg.user !== undefined ? msg.user : (msg.assistant !== undefined ? msg.assistant : '')))
       );
     }
-    
+
     console.log(contextMessages);
     // Convert contextMessages to a plain text string in the required format
     const contextString = contextMessages
       .map(msg => {
-        if (msg.user !== undefined) return `user: "${msg.user}"`;
-        if (msg.assistant !== undefined) return `assistant: "${msg.assistant}"`;
+        if (msg.user !== undefined) return `user: ${msg.user}`;
+        if (msg.assistant !== undefined) return `assistant: ${msg.assistant}`;
         return '';
       })
       .join('\n');
-  
+
     // 5. Call the streaming service
     this.streamingSubscription = this.chatStreamService.streamChat(contextString).subscribe({
       next: (chunk) => {
@@ -175,7 +174,7 @@ export class AiChatComponent implements OnInit, OnDestroy, AfterViewChecked {
       error: (err) => {
         console.error('Stream failed:', err);
         this.error = 'Failed to get response. Please try again.';
-  
+
         const aiMsg = this.messages.find(m => 'id' in m && m.id === aiMessageId) as AiMessage | undefined;
         if (aiMsg && aiMsg.isStreaming) {
           aiMsg.error = true;
@@ -203,11 +202,11 @@ export class AiChatComponent implements OnInit, OnDestroy, AfterViewChecked {
       this.streamingSubscription.unsubscribe();
       this.streamingSubscription = null;
       console.log('Unsubscribed from stream.');
-       // Find potentially unfinished streaming message and mark it as not streaming
-       const streamingMsg = this.messages.find(m => m.type === 'ai' && m.isStreaming);
-       if (streamingMsg) {
-         streamingMsg.isStreaming = false;
-       }
+      // Find potentially unfinished streaming message and mark it as not streaming
+      const streamingMsg = this.messages.find(m => m.type === 'ai' && m.isStreaming);
+      if (streamingMsg) {
+        streamingMsg.isStreaming = false;
+      }
     }
   }
 
@@ -227,32 +226,34 @@ export class AiChatComponent implements OnInit, OnDestroy, AfterViewChecked {
     }
   }
 
-generateLlmContext(messages: Message[], prompt: string, maxContextPairs = Infinity) {
-    // Collect user/assistant pairs in order, latest last
+  generateLlmContext(messages: Message[], prompt: string, maxContextPairs = Infinity) {
+    // Robustly pair user/assistant, skipping duplicates and always alternating
     const context: { user: string; assistant: string }[] = [];
-    let lastUser = null;
-    for (let i = messages.length - 1; i >= 0; i--) {
+    let lastUser: string | null = null;
+    for (let i = 0; i < messages.length; i++) {
       const msg = messages[i];
       if (msg.type === 'user') {
+        // If there's an unpaired user, push it with empty assistant
+        if (lastUser !== null) {
+          context.push({ user: lastUser, assistant: '' });
+        }
         lastUser = msg.content;
       } else if (msg.type === 'ai' && lastUser !== null) {
-        context.unshift({ user: lastUser, assistant: msg.content });
+        context.push({ user: lastUser, assistant: msg.content });
         lastUser = null;
       }
     }
-    // If there is a user message without an AI reply (e.g., the latest prompt), add it with empty assistant
+    // If there's a user left without an assistant, pair with empty string
     if (lastUser !== null) {
       context.push({ user: lastUser, assistant: '' });
-    }
-    // Always add the current prompt as the latest user message
-    if (prompt && (context.length === 0 || context[context.length - 1].user !== prompt)) {
-      context.push({ user: prompt, assistant: '' });
     }
     // Limit to maxContextPairs if needed
     let finalContext = context;
     if (maxContextPairs > 0 && maxContextPairs !== Infinity) {
       finalContext = context.slice(-maxContextPairs);
     }
+    // Reverse the context list so the latest is last
+    finalContext = finalContext.reverse();
     // Flatten to the requested format: user: "..." assistant: "..." ...
     const result: any[] = [];
     for (const pair of finalContext) {

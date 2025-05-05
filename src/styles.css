@@ -140,3 +140,23 @@ button {
 #chat-history-panel .modal-backdrop {
     background-color: transparent !important;
 }
+
+/* body {
+  height: calc(100vh - var(--clr-header-height));
+  min-height: -webkit-fill-available;
+  width: 100%;}
+
+html {
+  height: calc(100vh - 170px);
+  min-height: -webkit-fill-available;
+  overflow-x: hidden;
+}
+
+.shrink {
+  display: block !important;
+  height: calc(100vh - 130px) !important;
+}
+
+.main-container, .content-container, .content-area, .clr-vertical-nav, .chat-container, .has-messages {
+  height: calc(100vh - 130px) !important;
+} */
