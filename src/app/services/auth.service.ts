@@ -97,6 +97,11 @@ export class AuthService {
     return null;
   }
 
+  getCurrentUserId(): string | null {
+    const user = this.getCurrentUser();
+    return user ? user.uid : null;
+  }
+
   getAuth(): Auth {
     return this.auth;
   }

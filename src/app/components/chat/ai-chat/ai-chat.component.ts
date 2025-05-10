@@ -6,6 +6,7 @@ import { RouterModule } from '@angular/router';
 import { MarkdownComponent, SECURITY_CONTEXT } from 'ngx-markdown';
 import { ListClassDirective } from '../../../directives/list-class.directive';
 import { ChatStreamService } from '../../../services/chat-stream.service';
+import { ChatHistoryService } from '../../../services/chat-history.service';
 import { AuthService } from '../../../services/auth.service';
 import { AuthComponent } from '../../auth/auth.component';
 import { Subscription } from 'rxjs';
@@ -57,7 +58,18 @@ export class AiChatComponent implements OnInit, OnDestroy, AfterViewChecked {
   error: string | null = null;
   isAuthenticated = false;
   showAuthModal = false;
-  opened = false;
+  private _opened = false;
+  get opened() {
+    return this._opened;
+  }
+  set opened(val: boolean) {
+    if (this._opened !== val) {
+      this._opened = val;
+      if (val) {
+        this.loadChatHistory();
+      }
+    }
+  }
 
   @ViewChild('messageContainer') private messageContainer!: ElementRef;
   @ViewChild('messageInput') messageInput!: ElementRef<HTMLTextAreaElement>;
@@ -66,10 +78,16 @@ export class AiChatComponent implements OnInit, OnDestroy, AfterViewChecked {
   private needsScroll: boolean = false;
   private authSubscription: Subscription | null = null;
 
+
+  chatHistory: any = null;
+  chatHistoryLoading = false;
+  chatHistoryError: string | null = null;
+
   constructor(
     private chatStreamService: ChatStreamService,
     private cdRef: ChangeDetectorRef,
-    private authService: AuthService
+    private authService: AuthService,
+    private chatHistoryService: ChatHistoryService
   ) { }
 
   ngOnInit(): void {
@@ -84,6 +102,33 @@ export class AiChatComponent implements OnInit, OnDestroy, AfterViewChecked {
         this.cdRef.detectChanges();
       });
     }, 100); // 1 second delay
+  }
+
+  ngOnChanges(): void {
+    // Not used, but required for interface if needed
+  }
+
+  onHistoryPanelOpen(opened: boolean): void {
+    if (opened) {
+      this.loadChatHistory();
+    }
+  }
+
+  private loadChatHistory(): void {
+    this.chatHistoryLoading = true;
+    this.chatHistoryError = null;
+    this.chatHistoryService.getChatHistory().subscribe({
+      next: (data) => {
+        this.chatHistory = data;
+        this.chatHistoryLoading = false;
+        this.cdRef.detectChanges();
+      },
+      error: (err) => {
+        this.chatHistoryError = 'Failed to load chat history.';
+        this.chatHistoryLoading = false;
+        this.cdRef.detectChanges();
+      }
+    });
   }
 
   /**

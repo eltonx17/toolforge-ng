@@ -51,7 +51,7 @@
       <clr-tab>
         <button clrTabLink>Chat</button>
         <clr-tab-content *clrIfActive>
-          <p cds-text="body" cds-layout="m-t:md">
+                    <p cds-text="body" cds-layout="m-t:md">
             
           <clr-stack-view>
 
@@ -83,6 +83,14 @@
           </clr-stack-view>
 
           </p>
+
+          <div cds-text="body" cds-layout="m-t:md">
+            <ng-container *ngIf="chatHistoryLoading">Loading chat history...</ng-container>
+            <ng-container *ngIf="chatHistoryError">{{ chatHistoryError }}</ng-container>
+            <ng-container *ngIf="!chatHistoryLoading && !chatHistoryError && chatHistory">
+              <pre>{{ chatHistory | json }}</pre>
+            </ng-container>
+          </div>
         </clr-tab-content>
       </clr-tab>
       <clr-tab>

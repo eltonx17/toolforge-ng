@@ -1,12 +1,14 @@
 import { Injectable, NgZone } from '@angular/core';
 import { Observable, Observer } from 'rxjs';
 import { environment } from '../../environments/environment'; // For API base URL
+import { AuthService } from './auth.service';
+
 
 @Injectable({
   providedIn: 'root',
 })
 export class ChatStreamService {
-  constructor(private zone: NgZone) {}
+  constructor(private zone: NgZone, private authService: AuthService) {}
 
   /**
    * Connects to the backend SSE endpoint and returns an Observable
@@ -95,6 +97,12 @@ export class ChatStreamService {
       const sessionId = getSessionIdFromCookie();
       if (sessionId) {
         headers['Session-Id'] = sessionId;
+      }
+
+      // Add CurrentUserId to headers from AuthService
+      const currentUserId = this.authService.getCurrentUserId();
+      if (currentUserId) {
+        headers['userid'] = currentUserId;
       }
 
       // Main Fetch Execution
